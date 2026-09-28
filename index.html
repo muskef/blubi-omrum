@@ -1,334 +1,530 @@
-```html
 <!DOCTYPE html>
+
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
 
-    <title>Blubi ❤️ Ömrüm</title>
+<head> <meta charset="UTF-8">
 
-    <meta
-        name="description"
-        content="Un pequeño jardín creado especialmente para Ömrüm."
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json">
+<title>Blubi ❤️ Ömrüm</title>
 
-    <meta name="theme-color" content="#120b14">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="black-translucent"
-    >
-    <meta
-        name="apple-mobile-web-app-title"
-        content="Blubi ♥ Ömrüm"
-    >
+<meta
+    name="description"
+    content="Un pequeño jardín creado especialmente para Ömrüm."
+>
 
-    <!-- ICONO / APP -->
-    <meta name="application-name" content="Blubi ♥ Ömrüm">
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
 
-    <!-- FUENTES -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
+<meta
+    name="theme-color"
+    content="#120b14"
+>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
-        rel="stylesheet"
-    >
+<meta
+    name="mobile-web-app-capable"
+    content="yes"
+>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+<meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+>
+
+<meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+>
+
+<meta
+    name="apple-mobile-web-app-title"
+    content="Blubi ♥ Ömrüm"
+>
+
+<meta
+    name="application-name"
+    content="Blubi ♥ Ömrüm"
+>
+
+<!-- FUENTES -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<!-- CSS -->
+<link
+    rel="stylesheet"
+    href="./style.css"
+>
+
 </head>
 
 <body>
 
-    <!-- FONDO -->
-    <canvas id="backgroundCanvas"></canvas>
+<!-- =====================================================
+     FONDO
+     ===================================================== -->
 
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
-    <div class="background-glow glow-three"></div>
+<canvas id="backgroundCanvas"></canvas>
+
+<div class="background-glow glow-one"></div>
+<div class="background-glow glow-two"></div>
+<div class="background-glow glow-three"></div>
 
 
-    <!-- HEADER -->
-    <header class="hero">
+<!-- =====================================================
+     HEADER
+     ===================================================== -->
 
-        <div class="hero-top">
+<header class="hero">
 
-            <button
-                id="musicButton"
-                class="icon-button"
-                aria-label="Música"
-            >
-                ♪
-            </button>
+    <div class="hero-top">
 
-            <button
-                id="secretButton"
-                class="icon-button"
-                aria-label="Secreto"
-            >
-                ✦
-            </button>
+        <button
+            id="musicButton"
+            class="icon-button"
+            type="button"
+            aria-label="Activar música"
+        >
+            ♪
+        </button>
+
+        <button
+            id="secretButton"
+            class="icon-button"
+            type="button"
+            aria-label="Abrir secreto"
+        >
+            ✦
+        </button>
+
+    </div>
+
+
+    <div class="hero-content">
+
+        <div class="tiny-label">
+            PARA UNA PERSONA MUY ESPECIAL
+        </div>
+
+
+        <h1>
+            Hola,
+            <span>Ömrüm</span>
+        </h1>
+
+
+        <div class="heart-line">
+
+            <span></span>
+
+            <b>♥</b>
+
+            <span></span>
 
         </div>
 
 
-        <div class="hero-content">
-
-            <div class="tiny-label">
-                PARA UNA PERSONA MUY ESPECIAL
-            </div>
-
-            <h1>
-                Hola, <span>Ömrüm</span>
-            </h1>
-
-            <div class="heart-line">
-                <span></span>
-                <b>♥</b>
-                <span></span>
-            </div>
-
-            <p class="hero-subtitle">
-                Un año. 366 días. 366 flores.
-            </p>
-
-            <p class="hero-description">
-                Cada día habrá una flor esperando por ti.
-                Algunas serán pequeñas, otras especiales,
-                pero todas tendrán algo que decirte.
-            </p>
-
-            <div class="names">
-                Blubi <span>♥</span> Ömrüm
-            </div>
-
-        </div>
-
-    </header>
-
-
-    <!-- CONTADOR -->
-    <section class="today-section">
-
-        <div class="today-card">
-
-            <div class="today-label">
-                HOY EN NUESTRO JARDÍN
-            </div>
-
-            <div id="todayDate" class="today-date">
-                Cargando...
-            </div>
-
-            <div class="today-progress">
-
-                <div class="progress-info">
-                    <span id="dayCounter">
-                        Día 1 de 366
-                    </span>
-
-                    <span id="progressPercent">
-                        0%
-                    </span>
-                </div>
-
-                <div class="progress-bar">
-                    <div id="progressFill"></div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- BANNER ESPECIAL -->
-    <section
-        id="specialBanner"
-        class="special-banner hidden"
-    >
-
-        <div class="special-icon">
-            ♥
-        </div>
-
-        <div>
-
-            <strong id="specialTitle">
-                Hoy es especial
-            </strong>
-
-            <p id="specialText">
-                Hay una flor esperándote.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- JARDÍN -->
-    <main>
-
-        <div class="section-heading">
-
-            <span class="section-kicker">
-                NUESTRO JARDÍN
-            </span>
-
-            <h2>
-                Una flor cada día
-            </h2>
-
-            <p>
-                Las flores aparecen poco a poco.
-                La de hoy guarda un mensaje para ti.
-            </p>
-
-        </div>
-
-        <div
-            id="calendar"
-            class="calendar"
-        ></div>
-
-    </main>
-
-
-    <!-- SEMILLAS -->
-    <section class="future-section">
-
-        <div class="section-heading">
-
-            <span class="section-kicker">
-                PEQUEÑAS SEMILLAS
-            </span>
-
-            <h2>
-                Cosas que todavía están por crecer
-            </h2>
-
-            <p>
-                Algunas historias todavía no han comenzado.
-            </p>
-
-        </div>
-
-
-        <div class="seed-grid">
-
-            <div class="seed-card">
-
-                <div class="seed-icon">
-                    🌱
-                </div>
-
-                <h3>
-                    Yasin
-                </h3>
-
-                <p>
-                    Una pequeña semilla de un futuro
-                    que todavía queda muy lejos,
-                    pero que me gusta imaginar.
-                </p>
-
-            </div>
-
-
-            <div class="seed-card">
-
-                <div class="seed-icon">
-                    🌱
-                </div>
-
-                <h3>
-                    Alara
-                </h3>
-
-                <p>
-                    Otra semilla guardada aquí,
-                    como una pequeña ilusión
-                    para algún día.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- FOOTER -->
-    <footer>
-
-        <div class="footer-heart">
-            ♥
-        </div>
-
-        <p>
-            Hecho por Blubi para Ömrüm
+        <p class="hero-subtitle">
+            Un año. 366 días. 366 flores.
         </p>
 
-        <span>
-            Con mucho cariño.
+
+        <p class="hero-description">
+            Cada día habrá una flor esperando por ti.
+            Algunas serán pequeñas, otras especiales,
+            pero todas tendrán algo que decirte.
+        </p>
+
+
+        <div class="names">
+            Blubi
+            <span>♥</span>
+            Ömrüm
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     HOY
+     ===================================================== -->
+
+<section class="today-section">
+
+    <div class="today-card">
+
+        <div class="today-label">
+            HOY EN NUESTRO JARDÍN
+        </div>
+
+
+        <div
+            id="todayDate"
+            class="today-date"
+        >
+            Cargando...
+        </div>
+
+
+        <div class="today-progress">
+
+            <div class="progress-info">
+
+                <span id="dayCounter">
+                    Día 1 de 366
+                </span>
+
+                <span id="progressPercent">
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div id="progressFill"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     BANNER ESPECIAL
+     ===================================================== -->
+
+<section
+    id="specialBanner"
+    class="special-banner hidden"
+>
+
+    <div class="special-icon">
+        ♥
+    </div>
+
+
+    <div>
+
+        <strong id="specialTitle">
+            Hoy es especial
+        </strong>
+
+
+        <p id="specialText">
+            Hay una flor esperándote.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     JARDÍN
+     ===================================================== -->
+
+<main>
+
+    <div class="section-heading">
+
+        <span class="section-kicker">
+            NUESTRO JARDÍN
         </span>
 
-    </footer>
+
+        <h2>
+            Una flor cada día
+        </h2>
 
 
-    <!-- MODAL -->
+        <p>
+            Las flores aparecen poco a poco.
+            La de hoy guarda un mensaje para ti.
+        </p>
+
+    </div>
+
+
     <div
-        id="messageModal"
-        class="modal"
+        id="calendar"
+        class="calendar"
+    ></div>
+
+</main>
+
+
+<!-- =====================================================
+     SEMILLAS DEL FUTURO
+     ===================================================== -->
+
+<section class="future-section">
+
+    <div class="section-heading">
+
+        <span class="section-kicker">
+            PEQUEÑAS SEMILLAS
+        </span>
+
+
+        <h2>
+            Cosas que todavía están por crecer
+        </h2>
+
+
+        <p>
+            Algunas historias todavía no han comenzado.
+        </p>
+
+    </div>
+
+
+    <div class="seed-grid">
+
+        <div class="seed-card">
+
+            <div class="seed-icon">
+                🌱
+            </div>
+
+
+            <h3>
+                Yasin
+            </h3>
+
+
+            <p>
+                Una pequeña semilla de un futuro
+                que todavía queda muy lejos,
+                pero que me gusta imaginar.
+            </p>
+
+        </div>
+
+
+        <div class="seed-card">
+
+            <div class="seed-icon">
+                🌱
+            </div>
+
+
+            <h3>
+                Alara
+            </h3>
+
+
+            <p>
+                Otra semilla guardada aquí,
+                como una pequeña ilusión
+                para algún día.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer>
+
+    <div class="footer-heart">
+        ♥
+    </div>
+
+
+    <p>
+        Hecho por Blubi para Ömrüm
+    </p>
+
+
+    <span>
+        Con mucho cariño.
+    </span>
+
+</footer>
+
+
+<!-- =====================================================
+     MODAL DEL MENSAJE
+     ===================================================== -->
+
+<div
+    id="messageModal"
+    class="modal"
+    aria-hidden="true"
+>
+
+    <div
+        class="modal-backdrop"
+        id="modalBackdrop"
+    ></div>
+
+
+    <div
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
     >
 
-        <div class="modal-backdrop"></div>
-
-        <div class="modal-card">
-
-            <button
-                id="closeModal"
-                class="modal-close"
-                aria-label="Cerrar"
-            >
-                ×
-            </button>
+        <button
+            id="closeModal"
+            class="modal-close"
+            type="button"
+            aria-label="Cerrar"
+        >
+            ×
+        </button>
 
 
-            <div
-                id="modalFlower"
-                class="modal-flower"
-            >
-                🌹
-            </div>
+        <div
+            id="modalFlower"
+            class="modal-flower"
+        >
+            🌹
+        </div>
 
 
-            <div
-                id="modalDate"
-                class="modal-date"
-            >
-                28 de septiembre de 2026
-            </div>
+        <div
+            id="modalDate"
+            class="modal-date"
+        >
+            28 de septiembre de 2026
+        </div>
 
 
-            <h2 id="modalTitle">
-                Una flor para ti
-            </h2>
+        <h2 id="modalTitle">
+            Una flor para ti
+        </h2>
 
 
-            <
-```
+        <div class="modal-divider">
+            ♥
+        </div>
+
+
+        <p id="modalMessage">
+            Cada día tiene una pequeña sorpresa para ti.
+        </p>
+
+
+        <div class="modal-signature">
+
+            De tu Blubi para su Ömrüm
+
+            <span>
+                ♥
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+     ===================================================== -->
+
+<div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<!-- =====================================================
+     CONFETTI
+     ===================================================== -->
+
+<div
+    id="confettiContainer"
+    class="confetti-container"
+></div>
+
+
+<!-- =====================================================
+     BOTÓN VOLVER ARRIBA
+     ===================================================== -->
+
+<button
+    id="backTop"
+    class="back-top"
+    type="button"
+    aria-label="Volver arriba"
+>
+    ↑
+</button>
+
+
+<!-- =====================================================
+     JAVASCRIPT PRINCIPAL
+     ===================================================== -->
+
+<script src="./script.js"></script>
+
+
+<!-- =====================================================
+     SERVICE WORKER / PWA
+     ===================================================== -->
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener("load", () => {
+
+            navigator.serviceWorker
+                .register("./service-worker.js")
+                .then(() => {
+
+                    console.log(
+                        "Blubi ♥ Ömrüm: PWA activada correctamente."
+                    );
+
+                })
+                .catch((error) => {
+
+                    console.error(
+                        "Error registrando la PWA:",
+                        error
+                    );
+
+                });
+
+        });
+
+    }
+
+</script>
+
+</body>
+
+</html>
