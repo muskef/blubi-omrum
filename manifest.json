@@ -1,0 +1,12 @@
+{
+  "name": "Blubi ♥ Ömrüm",
+  "short_name": "Blubi ♥ Ömrüm",
+  "description": "Nuestro jardín de flores, una sorpresa para cada día.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#120b14",
+  "theme_color": "#120b14",
+  "orientation": "portrait",
+  "lang": "es",
+  "icons": []
+}
