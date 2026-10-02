@@ -2,7 +2,6 @@
     --bg: #120b14;
     --bg-soft: #1b101d;
     --card: rgba(34, 18, 35, 0.82);
-    --card-soft: rgba(255, 255, 255, 0.045);
 
     --pink: #f29abb;
     --pink-light: #ffd5e5;
@@ -22,13 +21,16 @@
     --radius: 24px;
 }
 
+
 * {
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
 }
+
 
 body {
     margin: 0;
@@ -55,19 +57,18 @@ body {
     color: var(--text);
 
     font-family:
-        Inter,
+        "DM Sans",
         system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
         sans-serif;
 
     overflow-x: hidden;
 }
 
+
 button {
     font: inherit;
 }
+
 
 #backgroundCanvas {
     position: fixed;
@@ -77,32 +78,24 @@ button {
     height: 100%;
 
     pointer-events: none;
+
     z-index: -2;
 }
 
-body::before {
-    content: "";
-
-    position: fixed;
-    inset: 0;
-
-    pointer-events: none;
-    z-index: -1;
-
-    background:
-        radial-gradient(
-            circle at 50% 50%,
-            transparent 0%,
-            rgba(0, 0, 0, 0.18) 65%,
-            rgba(0, 0, 0, 0.45) 100%
-        );
-}
 
 .page {
-    width: min(1180px, calc(100% - 32px));
+    width: min(
+        1180px,
+        calc(100% - 32px)
+    );
+
     margin: 0 auto;
+
     padding-bottom: 80px;
 }
+
+
+/* HEADER */
 
 header {
     min-height: 120px;
@@ -114,16 +107,17 @@ header {
     gap: 20px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
 .logo h1 {
     margin: 0;
 
-    font-size: clamp(24px, 5vw, 40px);
+    font-size:
+        clamp(
+            24px,
+            5vw,
+            40px
+        );
+
     font-weight: 800;
 
     letter-spacing: -1.5px;
@@ -138,22 +132,28 @@ header {
 
     -webkit-background-clip: text;
     background-clip: text;
+
     color: transparent;
 }
+
 
 .header-actions {
     display: flex;
     gap: 10px;
 }
 
+
 .icon-button {
     width: 44px;
     height: 44px;
 
-    border: 1px solid var(--border);
+    border:
+        1px solid var(--border);
+
     border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.04);
+    background:
+        rgba(255, 255, 255, 0.04);
 
     color: var(--cream);
 
@@ -161,27 +161,34 @@ header {
 
     transition:
         transform 0.25s ease,
-        background 0.25s ease,
-        border-color 0.25s ease;
+        background 0.25s ease;
 }
+
 
 .icon-button:hover {
     transform: translateY(-3px);
 
-    background: rgba(242, 154, 187, 0.12);
-
-    border-color:
-        rgba(242, 154, 187, 0.35);
+    background:
+        rgba(242, 154, 187, 0.12);
 }
+
+
+/* HERO */
 
 .hero {
     padding: 25px 0 45px;
 }
 
+
 .hero-card {
     position: relative;
 
-    padding: clamp(25px, 5vw, 55px);
+    padding:
+        clamp(
+            25px,
+            5vw,
+            55px
+        );
 
     border:
         1px solid var(--border);
@@ -199,6 +206,7 @@ header {
 
     overflow: hidden;
 }
+
 
 .hero-card::before {
     content: "";
@@ -219,30 +227,60 @@ header {
     filter: blur(40px);
 }
 
+
 .hero-card h2 {
-    margin: 0 0 12px;
+    margin: 0 0 15px;
 
-    max-width: 700px;
+    font-family:
+        "Playfair Display",
+        serif;
 
-    font-size: clamp(30px, 7vw, 60px);
-    line-height: 0.98;
+    font-size:
+        clamp(
+            40px,
+            8vw,
+            72px
+        );
+
+    line-height: 1;
 
     letter-spacing: -2px;
 }
 
-.hero-card p {
-    margin: 0;
 
+.hero-card h2 span {
+    background:
+        linear-gradient(
+            120deg,
+            var(--pink-light),
+            var(--pink),
+            var(--gold)
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+
+.hero-card > p {
     max-width: 700px;
+
+    margin: 0;
 
     color: var(--muted);
 
     font-size: 16px;
+
     line-height: 1.7;
 }
 
+
+/* TODAY */
+
 .today-card {
-    margin-top: 22px;
+    margin-top: 25px;
 
     display: grid;
 
@@ -262,10 +300,8 @@ header {
 
     background:
         rgba(255, 255, 255, 0.035);
-
-    box-shadow:
-        0 15px 45px rgba(0, 0, 0, 0.2);
 }
+
 
 .today-flower {
     width: 76px;
@@ -289,31 +325,34 @@ header {
         flowerFloat 3s ease-in-out infinite;
 }
 
+
 .today-content small {
     color: var(--gold);
 
-    text-transform: uppercase;
-
     letter-spacing: 1.5px;
+
+    font-size: 11px;
 }
 
+
 .today-content h3 {
-    margin: 4px 0 7px;
+    margin: 4px 0 5px;
 
     font-size: 22px;
 }
+
 
 .today-content p {
     margin: 0;
 
     color: var(--muted);
-
-    line-height: 1.55;
 }
+
 
 .progress {
-    min-width: 170px;
+    min-width: 180px;
 }
+
 
 .progress-top {
     display: flex;
@@ -321,9 +360,11 @@ header {
 
     margin-bottom: 8px;
 
-    font-size: 12px;
     color: var(--muted);
+
+    font-size: 12px;
 }
+
 
 .progress-track {
     height: 7px;
@@ -336,10 +377,10 @@ header {
     overflow: hidden;
 }
 
-.progress-bar {
-    height: 100%;
 
-    width: 0%;
+.progress-bar {
+    width: 0;
+    height: 100%;
 
     border-radius: inherit;
 
@@ -355,57 +396,76 @@ header {
         width 0.6s ease;
 }
 
-.special-banner {
-    margin: 15px 0 0;
 
-    padding: 13px 16px;
+/* BANNER */
+
+.special-banner {
+    margin-top: 15px;
+
+    padding: 14px 18px;
+
+    border:
+        1px solid var(--border);
 
     border-radius: 16px;
 
-    border:
-        1px solid transparent;
-
-    color: var(--muted);
-
     text-align: center;
 
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
+    color: var(--muted);
 }
+
 
 .special-banner.active {
     color: var(--pink-light);
 
     border-color:
-        rgba(242, 154, 187, 0.3);
+        rgba(242, 154, 187, 0.4);
 
     background:
-        rgba(242, 154, 187, 0.07);
+        rgba(242, 154, 187, 0.08);
 
     animation:
         bannerPulse 2.4s ease-in-out infinite;
 }
 
-.calendar-section {
+
+.special-banner strong {
+    color: var(--pink-light);
+}
+
+
+/* SECTIONS */
+
+.calendar-section,
+.future-section {
     padding-top: 20px;
 }
+
 
 .section-title {
     margin-bottom: 22px;
 }
 
+
 .section-title h2 {
     margin: 0 0 7px;
 
-    font-size: 30px;
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 32px;
 }
+
 
 .section-title p {
     margin: 0;
 
     color: var(--muted);
 }
+
+
+/* MONTH */
 
 .month-card {
     margin-bottom: 30px;
@@ -424,6 +484,7 @@ header {
         0 15px 50px rgba(0, 0, 0, 0.18);
 }
 
+
 .month-header {
     display: flex;
 
@@ -440,11 +501,19 @@ header {
         1px solid var(--border);
 }
 
+
 .month-header h2 {
     margin: 0;
 
+    font-family:
+        "Playfair Display",
+        serif;
+
     font-size: 25px;
+
+    text-transform: capitalize;
 }
+
 
 .month-header p {
     margin: 0;
@@ -454,6 +523,7 @@ header {
     font-size: 13px;
 }
 
+
 .calendar-grid {
     display: grid;
 
@@ -462,6 +532,9 @@ header {
 
     gap: 8px;
 }
+
+
+/* DAYS */
 
 .day {
     position: relative;
@@ -492,6 +565,7 @@ header {
         box-shadow 0.25s ease;
 }
 
+
 .day:hover:not(.future):not(.past) {
     transform: translateY(-4px);
 
@@ -505,6 +579,7 @@ header {
         0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
+
 .day.empty {
     min-height: 105px;
 
@@ -515,15 +590,20 @@ header {
     pointer-events: none;
 }
 
+
 .day.future {
     opacity: 0.48;
+
     cursor: default;
 }
 
+
 .day.past {
     opacity: 0.5;
+
     cursor: default;
 }
+
 
 .day.today {
     border-color:
@@ -534,10 +614,12 @@ header {
         0 0 25px rgba(242, 154, 187, 0.12);
 }
 
-.day.special {
-    border-color:
-        rgba(244, 213, 141, 0.3);
+
+.day.opened {
+    background:
+        rgba(242, 154, 187, 0.05);
 }
+
 
 .day-number {
     position: absolute;
@@ -545,10 +627,11 @@ header {
     top: 8px;
     left: 10px;
 
-    font-size: 12px;
-
     color: var(--muted);
+
+    font-size: 12px;
 }
+
 
 .flower {
     display: block;
@@ -559,26 +642,30 @@ header {
 
     line-height: 1;
 
+    animation:
+        flowerFloat 3.2s ease-in-out infinite;
+
     filter:
         drop-shadow(
             0 6px 12px rgba(0, 0, 0, 0.25)
         );
-
-    animation:
-        flowerFloat 3.2s ease-in-out infinite;
 }
+
 
 .day:nth-child(3n) .flower {
     animation-delay: -0.7s;
 }
 
+
 .day:nth-child(4n) .flower {
     animation-delay: -1.2s;
 }
 
+
 .day:nth-child(5n) .flower {
     animation-delay: -1.8s;
 }
+
 
 .day-mark {
     position: absolute;
@@ -595,14 +682,8 @@ header {
     letter-spacing: 0.8px;
 }
 
-.day.opened {
-    background:
-        rgba(242, 154, 187, 0.05);
-}
 
-/* ========================================
-   DÍA ESPECIAL — 03/10/2026
-======================================== */
+/* 03 OCTOBER */
 
 .day.special-love-day {
     border-color:
@@ -620,10 +701,12 @@ header {
         0 0 28px rgba(242, 154, 187, 0.2);
 }
 
+
 .day.special-love-day::after {
     content: "";
 
     position: absolute;
+
     inset: 4px;
 
     border:
@@ -637,6 +720,7 @@ header {
         specialDayRing 2s ease-in-out infinite;
 }
 
+
 .day.special-love-day .flower {
     font-size: 43px;
 
@@ -649,6 +733,7 @@ header {
         );
 }
 
+
 .day.special-love-day .day-mark {
     color: var(--pink-light);
 
@@ -656,9 +741,80 @@ header {
         0 0 10px rgba(242, 154, 187, 0.6);
 }
 
-/* ========================================
-   MODAL
-======================================== */
+
+/* FUTURE */
+
+.seed-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+
+.seed-card {
+    padding: 28px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    background:
+        rgba(255, 255, 255, 0.025);
+
+    text-align: center;
+}
+
+
+.seed-icon {
+    font-size: 42px;
+}
+
+
+.seed-card h3 {
+    margin: 12px 0 8px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 25px;
+}
+
+
+.seed-card p {
+    margin: 0;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+
+/* FOOTER */
+
+footer {
+    padding-top: 45px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.8;
+}
+
+
+footer strong {
+    color: var(--pink-light);
+}
+
+
+/* MODAL */
 
 .modal {
     position: fixed;
@@ -680,10 +836,12 @@ header {
         visibility 0.35s ease;
 }
 
+
 .modal.show {
     opacity: 1;
     visibility: visible;
 }
+
 
 .modal-backdrop {
     position: absolute;
@@ -697,10 +855,14 @@ header {
         blur(12px);
 }
 
+
 .modal-card {
     position: relative;
 
-    width: min(620px, 100%);
+    width: min(
+        620px,
+        100%
+    );
 
     max-height: 90vh;
 
@@ -733,11 +895,13 @@ header {
         transform 0.4s ease;
 }
 
+
 .modal.show .modal-card {
     transform:
         translateY(0)
         scale(1);
 }
+
 
 .modal-close {
     position: absolute;
@@ -749,6 +913,7 @@ header {
     height: 38px;
 
     border: 0;
+
     border-radius: 50%;
 
     background:
@@ -761,14 +926,16 @@ header {
     font-size: 20px;
 }
 
-.modal-flower {
-    font-size: 78px;
 
+.modal-flower {
     margin-bottom: 14px;
+
+    font-size: 78px;
 
     animation:
         flowerFloat 3s ease-in-out infinite;
 }
+
 
 .modal-date {
     margin-bottom: 8px;
@@ -782,17 +949,29 @@ header {
     letter-spacing: 1.5px;
 }
 
+
 .modal-card h2 {
     margin: 0 0 17px;
 
-    font-size: clamp(28px, 6vw, 42px);
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size:
+        clamp(
+            28px,
+            6vw,
+            42px
+        );
 }
+
 
 .modal-divider {
     width: 80px;
     height: 1px;
 
-    margin: 0 auto 22px;
+    margin:
+        0 auto 22px;
 
     background:
         linear-gradient(
@@ -803,6 +982,7 @@ header {
         );
 }
 
+
 .modal-message {
     margin: 0;
 
@@ -812,6 +992,7 @@ header {
 
     font-size: 16px;
 }
+
 
 .modal-signature {
     margin-top: 25px;
@@ -825,9 +1006,8 @@ header {
     font-size: 20px;
 }
 
-/* ========================================
-   MODAL ESPECIAL — TE AMO MUCHO
-======================================== */
+
+/* MODAL ESPECIAL */
 
 .modal.special-love {
     background:
@@ -838,6 +1018,7 @@ header {
         );
 }
 
+
 .modal.special-love .modal-backdrop {
     background:
         radial-gradient(
@@ -846,6 +1027,7 @@ header {
             rgba(4, 2, 6, 0.94)
         );
 }
+
 
 .modal.special-love .modal-card {
     border-color:
@@ -872,6 +1054,7 @@ header {
         specialCardGlow 2.8s ease-in-out infinite;
 }
 
+
 .modal.special-love .modal-card::before {
     content: "";
 
@@ -879,16 +1062,17 @@ header {
 
     inset: -2px;
 
-    border-radius: 32px;
-
     border:
         1px solid rgba(255, 213, 229, 0.12);
+
+    border-radius: 32px;
 
     pointer-events: none;
 
     animation:
         specialCardRing 2.5s ease-in-out infinite;
 }
+
 
 .modal.special-love .modal-flower {
     font-size: 92px;
@@ -902,12 +1086,14 @@ header {
         specialModalFlower 2.2s ease-in-out infinite;
 }
 
+
 .modal.special-love .modal-date {
     color: var(--pink-light);
 
     text-shadow:
         0 0 14px rgba(242, 154, 187, 0.5);
 }
+
 
 .modal.special-love .modal-card h2 {
     background:
@@ -930,6 +1116,7 @@ header {
         specialTitle 3s linear infinite;
 }
 
+
 .modal.special-love .modal-divider {
     width: 130px;
 
@@ -940,12 +1127,11 @@ header {
         dividerGlow 2s ease-in-out infinite;
 }
 
+
 .modal.special-love .modal-message {
     color: #fff0f5;
-
-    text-shadow:
-        0 1px 10px rgba(0, 0, 0, 0.25);
 }
+
 
 .modal.special-love .modal-signature {
     color: #ffd2e5;
@@ -954,9 +1140,8 @@ header {
         0 0 14px rgba(242, 154, 187, 0.6);
 }
 
-/* ========================================
-   CORAZONES ESPECIALES
-======================================== */
+
+/* CORAZONES */
 
 .love-burst-container {
     position: fixed;
@@ -970,11 +1155,16 @@ header {
     overflow: hidden;
 }
 
+
 .love-particle {
     position: absolute;
 
     font-size:
-        calc(12px + 12px * var(--random-size, 0.5));
+        calc(
+            12px +
+            12px *
+            var(--random-size, 0.5)
+        );
 
     color: var(--pink-light);
 
@@ -985,40 +1175,20 @@ header {
     animation:
         loveBurst
         var(--time)
-        cubic-bezier(0.15, 0.7, 0.2, 1)
+        cubic-bezier(
+            0.15,
+            0.7,
+            0.2,
+            1
+        )
         forwards;
 
     animation-delay:
         var(--delay);
 }
 
-/* ========================================
-   CONFETTI
-======================================== */
 
-.confetti {
-    position: fixed;
-
-    top: -30px;
-
-    z-index: 320;
-
-    pointer-events: none;
-
-    color: var(--pink-light);
-
-    font-size: 18px;
-
-    animation:
-        confettiFall
-        3s
-        linear
-        forwards;
-}
-
-/* ========================================
-   TOAST
-======================================== */
+/* TOAST */
 
 #toast {
     position: fixed;
@@ -1028,9 +1198,11 @@ header {
 
     z-index: 500;
 
-    max-width: calc(100% - 32px);
+    max-width:
+        calc(100% - 32px);
 
-    padding: 13px 18px;
+    padding:
+        13px 18px;
 
     border:
         1px solid var(--border);
@@ -1057,12 +1229,16 @@ header {
         transform 0.3s ease;
 }
 
+
 #toast.show {
     opacity: 1;
 
     transform:
         translate(-50%, 0);
 }
+
+
+/* BACK TOP */
 
 #backTop {
     position: fixed;
@@ -1100,6 +1276,7 @@ header {
         transform 0.25s ease;
 }
 
+
 #backTop.show {
     opacity: 1;
 
@@ -1109,25 +1286,11 @@ header {
         translateY(0);
 }
 
-footer {
-    padding-top: 35px;
 
-    text-align: center;
-
-    color: var(--muted);
-
-    font-size: 13px;
-}
-
-footer strong {
-    color: var(--pink-light);
-}
-
-/* ========================================
-   ANIMACIONES
-======================================== */
+/* ANIMACIONES */
 
 @keyframes flowerFloat {
+
     0%,
     100% {
         transform:
@@ -1142,7 +1305,9 @@ footer strong {
     }
 }
 
+
 @keyframes bannerPulse {
+
     0%,
     100% {
         box-shadow:
@@ -1155,7 +1320,9 @@ footer strong {
     }
 }
 
+
 @keyframes specialDayRing {
+
     0%,
     100% {
         opacity: 0.25;
@@ -1168,7 +1335,9 @@ footer strong {
     }
 }
 
+
 @keyframes specialDayFlower {
+
     0%,
     100% {
         transform:
@@ -1183,7 +1352,9 @@ footer strong {
     }
 }
 
+
 @keyframes specialCardGlow {
+
     0%,
     100% {
         box-shadow:
@@ -1200,7 +1371,9 @@ footer strong {
     }
 }
 
+
 @keyframes specialCardRing {
+
     0%,
     100% {
         opacity: 0.2;
@@ -1213,7 +1386,9 @@ footer strong {
     }
 }
 
+
 @keyframes specialModalFlower {
+
     0%,
     100% {
         transform:
@@ -1244,17 +1419,23 @@ footer strong {
     }
 }
 
+
 @keyframes specialTitle {
+
     0% {
-        background-position: 0% center;
+        background-position:
+            0% center;
     }
 
     100% {
-        background-position: 250% center;
+        background-position:
+            250% center;
     }
 }
 
+
 @keyframes dividerGlow {
+
     0%,
     100% {
         opacity: 0.55;
@@ -1265,7 +1446,9 @@ footer strong {
     }
 }
 
+
 @keyframes loveBurst {
+
     0% {
         opacity: 0;
 
@@ -1292,43 +1475,26 @@ footer strong {
     }
 }
 
-@keyframes confettiFall {
-    0% {
-        transform:
-            translateY(0)
-            rotate(0deg);
 
-        opacity: 1;
-    }
-
-    100% {
-        transform:
-            translateY(110vh)
-            rotate(720deg);
-
-        opacity: 0;
-    }
-}
-
-/* ========================================
-   RESPONSIVE
-======================================== */
+/* RESPONSIVE */
 
 @media (max-width: 700px) {
+
     .page {
-        width: min(
-            100% - 18px,
-            1180px
-        );
+        width:
+            calc(100% - 18px);
     }
+
 
     header {
         min-height: 90px;
     }
 
+
     .hero {
         padding-top: 10px;
     }
+
 
     .hero-card {
         padding: 25px 20px;
@@ -1336,14 +1502,17 @@ footer strong {
         border-radius: 25px;
     }
 
+
     .hero-card h2 {
-        font-size: 38px;
+        font-size: 42px;
     }
+
 
     .today-card {
         grid-template-columns:
             auto 1fr;
     }
+
 
     .progress {
         grid-column: 1 / -1;
@@ -1351,11 +1520,13 @@ footer strong {
         min-width: 0;
     }
 
+
     .month-card {
         padding: 12px;
 
         border-radius: 20px;
     }
+
 
     .month-header {
         align-items: flex-start;
@@ -1365,9 +1536,11 @@ footer strong {
         gap: 4px;
     }
 
+
     .calendar-grid {
         gap: 5px;
     }
+
 
     .day {
         min-height: 78px;
@@ -1377,9 +1550,11 @@ footer strong {
         border-radius: 12px;
     }
 
+
     .day.empty {
         min-height: 78px;
     }
+
 
     .flower {
         margin-top: 17px;
@@ -1387,9 +1562,11 @@ footer strong {
         font-size: 27px;
     }
 
+
     .day.special-love-day .flower {
         font-size: 32px;
     }
+
 
     .day-number {
         top: 6px;
@@ -1398,6 +1575,7 @@ footer strong {
         font-size: 10px;
     }
 
+
     .day-mark {
         right: 5px;
         bottom: 5px;
@@ -1405,19 +1583,28 @@ footer strong {
         font-size: 6px;
     }
 
+
+    .seed-grid {
+        grid-template-columns: 1fr;
+    }
+
+
     .modal-card {
         padding: 28px 20px;
 
         border-radius: 25px;
     }
 
+
     .modal-flower {
         font-size: 65px;
     }
 
+
     .modal.special-love .modal-flower {
         font-size: 78px;
     }
+
 
     .modal-message {
         font-size: 15px;
@@ -1426,12 +1613,19 @@ footer strong {
     }
 }
 
+
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        scroll-behavior:
+            auto !important;
     }
 }
