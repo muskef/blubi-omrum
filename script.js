@@ -360,6 +360,25 @@ const specialMessages = {
         flower: "🌱"
     },
 
+
+    /* =====================================================
+       02 DE OCTUBRE DE 2026
+       FECHA ESPECIAL
+       ===================================================== */
+
+    "2026-10-02": {
+
+        title: "Te amo mucho",
+
+        text:
+            "Mi kurdi, te amo un montón, no veas lo cómodo que estoy cuando te abrazo, siento que no me hace falta nada más de este mundo. Al igual soy un poco intenso, que me enfado por tonterías o me pongo muy feliz por cosas insignificantes, pero no quiero que dudes un segundo de que te amo. Y si algún día me toca despedirme de este mundo, solo espero haber tenido la suerte de vivir todo lo bonito que pueda a tu lado.",
+
+        flower: "🌹",
+
+        animation: "love"
+    },
+
+
     "2027-01-21": {
         title: "Feliz cumpleaños, Ömrüm 🎂",
 
@@ -459,19 +478,16 @@ function getMessage(date, index) {
 
     const key = dateKey(date);
 
-    /* Especiales */
-
     if (specialMessages[key]) {
 
         return {
             title: specialMessages[key].title,
             text: specialMessages[key].text,
-            flower: specialMessages[key].flower
+            flower: specialMessages[key].flower,
+            animation: specialMessages[key].animation || null
         };
     }
 
-
-    /* Día 24 */
 
     if (date.getDate() === 24) {
 
@@ -482,12 +498,12 @@ function getMessage(date, index) {
                 twentyFourMessages[date.getMonth() + 1] ||
                 "Una flor especial para un día especial.",
 
-            flower: "🌹"
+            flower: "🌹",
+
+            animation: null
         };
     }
 
-
-    /* Normal */
 
     const dailyIndex =
         (index + date.getDate() * 3)
@@ -511,7 +527,9 @@ function getMessage(date, index) {
             + monthTheme,
 
         flower:
-            getFlowerEmoji(index)
+            getFlowerEmoji(index),
+
+        animation: null
     };
 }
 
@@ -629,8 +647,6 @@ function renderCalendar() {
             "month-card";
 
 
-        /* HEADER */
-
         const header =
             document.createElement("div");
 
@@ -655,8 +671,6 @@ function renderCalendar() {
 
         monthCard.appendChild(header);
 
-
-        /* WEEKDAYS */
 
         const weekdays =
             document.createElement("div");
@@ -685,19 +699,12 @@ function renderCalendar() {
         monthCard.appendChild(weekdays);
 
 
-        /* GRID */
-
         const grid =
             document.createElement("div");
 
         grid.className =
             "month-grid";
 
-
-        /*
-         * JS empieza domingo = 0.
-         * Lo convertimos a lunes = 0.
-         */
 
         let firstDay =
             new Date(
@@ -711,8 +718,6 @@ function renderCalendar() {
                 ? 6
                 : firstDay - 1;
 
-
-        /* HUECOS */
 
         for (
             let i = 0;
@@ -729,8 +734,6 @@ function renderCalendar() {
             grid.appendChild(empty);
         }
 
-
-        /* DÍAS */
 
         const daysInMonth =
             new Date(
@@ -752,10 +755,6 @@ function renderCalendar() {
                     day
                 );
 
-
-            /*
-             * Solo fechas dentro del rango
-             */
 
             if (
                 date < START_DATE ||
@@ -833,7 +832,15 @@ function renderCalendar() {
             }
 
 
-            /* Número */
+            if (
+                key === "2026-10-02"
+            ) {
+
+                cell.classList.add(
+                    "ultimate-special"
+                );
+            }
+
 
             const number =
                 document.createElement("div");
@@ -846,8 +853,6 @@ function renderCalendar() {
 
             cell.appendChild(number);
 
-
-            /* Candado */
 
             if (isFuture) {
 
@@ -863,8 +868,6 @@ function renderCalendar() {
                 cell.appendChild(lock);
             }
 
-
-            /* Flor */
 
             const flowerContainer =
                 document.createElement("div");
@@ -967,8 +970,6 @@ function renderCalendar() {
             );
 
 
-            /* Especial */
-
             if (
                 specialMessages[key] ||
                 date.getDate() === 24
@@ -980,35 +981,52 @@ function renderCalendar() {
                 mark.className =
                     "special-mark";
 
+
                 if (specialMessages[key]) {
 
-                    if (key === "2027-01-21") {
+                    if (key === "2026-10-02") {
+
+                        mark.textContent =
+                            "TE AMO";
+
+                    } else if (
+                        key === "2027-01-21"
+                    ) {
+
                         mark.textContent =
                             "CUMPLEAÑOS";
+
                     }
 
                     else if (
                         key === "2027-02-08"
                     ) {
+
                         mark.textContent =
                             "8 FEB";
+
                     }
 
                     else if (
                         key === "2027-06-03"
                     ) {
+
                         mark.textContent =
                             "CUMPLE BLUBI";
+
                     }
 
                     else if (
                         key === "2027-07-24"
                     ) {
+
                         mark.textContent =
                             "NUESTRO DÍA";
+
                     }
 
                     else {
+
                         mark.textContent =
                             "ESPECIAL";
                     }
@@ -1023,8 +1041,6 @@ function renderCalendar() {
             }
 
 
-            /* CLICK */
-
             cell.addEventListener(
                 "click",
                 () => {
@@ -1038,13 +1054,6 @@ function renderCalendar() {
                         return;
                     }
 
-
-                    /*
-                     * IMPORTANTE:
-                     *
-                     * Las flores pasadas NO se pueden abrir.
-                     * Solo la flor de HOY.
-                     */
 
                     if (!isToday) {
 
@@ -1076,8 +1085,6 @@ function renderCalendar() {
         calendar.appendChild(monthCard);
 
 
-        /* Siguiente mes */
-
         current =
             new Date(
                 year,
@@ -1098,6 +1105,13 @@ function openFlower(
     message
 ) {
 
+    const key =
+        dateKey(date);
+
+    const isLoveSpecial =
+        key === "2026-10-02";
+
+
     modalDate.textContent =
         formatDate(date);
 
@@ -1112,6 +1126,31 @@ function openFlower(
         getFlowerEmoji(index);
 
 
+    modal.classList.remove(
+        "love-special"
+    );
+
+
+    if (isLoveSpecial) {
+
+        /*
+         * Pequeña pausa para que la animación
+         * tenga una entrada más cinematográfica.
+         */
+
+        requestAnimationFrame(() => {
+
+            modal.classList.add(
+                "love-special"
+            );
+
+        });
+
+        createLoveParticles();
+
+    }
+
+
     modal.classList.add("active");
 
     document.body.style.overflow =
@@ -1119,18 +1158,38 @@ function openFlower(
 
 
     markOpened(
-        dateKey(date)
+        key
     );
 
 
     createConfetti();
 
 
-    /*
-     * Sonido suave
-     */
+    if (isLoveSpecial) {
+
+        createHeartExplosion();
+
+    }
+
 
     playOpenSound();
+}
+
+
+/* =========================================================
+   MARCAR COMO ABIERTA
+   ========================================================= */
+
+function markOpened(key) {
+
+    if (
+        !state.opened.includes(key)
+    ) {
+
+        state.opened.push(key);
+
+        saveState();
+    }
 }
 
 
@@ -1141,7 +1200,8 @@ function openFlower(
 function closeMessageModal() {
 
     modal.classList.remove(
-        "active"
+        "active",
+        "love-special"
     );
 
     document.body.style.overflow =
@@ -1264,8 +1324,18 @@ function updateSpecialBanner(
         title =
             specialMessages[key].title;
 
-        text =
-            "Hoy hay una flor especial esperando por ti.";
+        if (
+            key === "2026-10-02"
+        ) {
+
+            text =
+                "Hoy hay algo muy especial esperando por ti. ❤️";
+
+        } else {
+
+            text =
+                "Hoy hay una flor especial esperando por ti.";
+        }
 
     }
 
@@ -1451,6 +1521,182 @@ function createConfetti() {
             container.remove();
         },
         3000
+    );
+}
+
+
+/* =========================================================
+   ANIMACIÓN ESPECIAL 02/10/2026
+   CORAZONES
+   ========================================================= */
+
+function createHeartExplosion() {
+
+    const container =
+        document.createElement(
+            "div"
+        );
+
+    container.className =
+        "love-explosion";
+
+
+    const hearts = 34;
+
+
+    for (
+        let i = 0;
+        i < hearts;
+        i++
+    ) {
+
+        const heart =
+            document.createElement(
+                "span"
+            );
+
+        heart.className =
+            "love-particle";
+
+        heart.textContent =
+            Math.random() > 0.35
+                ? "♥"
+                : "♡";
+
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+        const distance =
+            90 +
+            Math.random() *
+            260;
+
+
+        heart.style.setProperty(
+            "--x",
+            `${Math.cos(angle) * distance}px`
+        );
+
+        heart.style.setProperty(
+            "--y",
+            `${Math.sin(angle) * distance}px`
+        );
+
+        heart.style.setProperty(
+            "--delay",
+            `${Math.random() * 0.35}s`
+        );
+
+        heart.style.setProperty(
+            "--size",
+            `${10 + Math.random() * 17}px`
+        );
+
+        heart.style.setProperty(
+            "--rotation",
+            `${Math.random() * 70 - 35}deg`
+        );
+
+
+        container.appendChild(
+            heart
+        );
+    }
+
+
+    document.body.appendChild(
+        container
+    );
+
+
+    setTimeout(
+        () => {
+            container.remove();
+        },
+        2200
+    );
+}
+
+
+/* =========================================================
+   PARTÍCULAS ESPECIALES
+   ========================================================= */
+
+function createLoveParticles() {
+
+    const container =
+        document.createElement(
+            "div"
+        );
+
+    container.className =
+        "love-background";
+
+
+    const amount = 24;
+
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const particle =
+            document.createElement(
+                "span"
+            );
+
+        particle.className =
+            "love-background-particle";
+
+        particle.textContent =
+            Math.random() > 0.5
+                ? "♥"
+                : "✦";
+
+
+        particle.style.left =
+            `${Math.random() * 100}%`;
+
+        particle.style.top =
+            `${50 + Math.random() * 50}%`;
+
+        particle.style.setProperty(
+            "--delay",
+            `${Math.random() * 1.4}s`
+        );
+
+        particle.style.setProperty(
+            "--duration",
+            `${2.5 + Math.random() * 3}s`
+        );
+
+        particle.style.setProperty(
+            "--size",
+            `${7 + Math.random() * 13}px`
+        );
+
+
+        container.appendChild(
+            particle
+        );
+    }
+
+
+    document.body.appendChild(
+        container
+    );
+
+
+    setTimeout(
+        () => {
+            container.remove();
+        },
+        6000
     );
 }
 
@@ -1708,6 +1954,10 @@ function showSecret() {
 
     modalMessage.textContent =
         "Si llegaste hasta aquí, solo quería dejarte algo que no necesitaba una fecha: entre todas las flores, todos los días y todos los mensajes, la parte más importante siempre ha sido la persona que está al otro lado de la pantalla leyendo esto.";
+
+    modal.classList.remove(
+        "love-special"
+    );
 
     modal.classList.add(
         "active"
