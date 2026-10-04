@@ -1,1 +1,1222 @@
+<!DOCTYPE html>
+<html lang="es">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Respuestas de Ömrüm ❤️</title>
+
+    <meta
+        name="theme-color"
+        content="#120b14"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <style>
+
+        :root {
+
+            --bg: #120b14;
+            --card: #211322;
+
+            --pink: #f29abb;
+            --pink-light: #ffd5e5;
+
+            --gold: #f4d58d;
+
+            --text: #f9eaf0;
+            --muted: #bba8b1;
+
+            --border:
+                rgba(255,205,225,0.14);
+
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(201,99,141,0.16),
+                    transparent 40%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                "DM Sans",
+                sans-serif;
+
+        }
+
+
+        .container {
+
+            width:
+                min(1000px, calc(100% - 30px));
+
+            margin:
+                0 auto;
+
+            padding:
+                35px 0 70px;
+
+        }
+
+
+        header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        h1 {
+
+            margin: 0;
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            color:
+                var(--pink-light);
+
+        }
+
+
+        .subtitle {
+
+            margin-top: 5px;
+
+            color:
+                var(--muted);
+
+        }
+
+
+        button {
+
+            font-family:
+                inherit;
+
+            cursor: pointer;
+
+        }
+
+
+        .logout {
+
+            padding:
+                10px 15px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            color:
+                var(--pink-light);
+
+        }
+
+
+        .login-card {
+
+            width:
+                min(430px, 100%);
+
+            margin:
+                100px auto;
+
+            padding:
+                35px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                25px;
+
+            background:
+                rgba(33,19,34,0.9);
+
+            box-shadow:
+                0 25px 80px rgba(0,0,0,0.4);
+
+        }
+
+
+        .login-card h1 {
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            margin:
+                18px 0 7px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                13px;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding:
+                13px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                12px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,0.2);
+
+            color:
+                var(--text);
+
+        }
+
+
+        input:focus {
+
+            border-color:
+                var(--pink);
+
+        }
+
+
+        .login-button {
+
+            width: 100%;
+
+            margin-top: 22px;
+
+            padding:
+                13px;
+
+            border: none;
+
+            border-radius:
+                12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #c9638d,
+                    #f29abb
+                );
+
+            color:
+                #210d17;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .error {
+
+            margin-top:
+                14px;
+
+            color:
+                #ff9fae;
+
+            font-size:
+                13px;
+
+        }
+
+
+        .stats {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap:
+                15px;
+
+            margin-bottom:
+                25px;
+
+        }
+
+
+        .stat {
+
+            padding:
+                20px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                18px;
+
+            background:
+                rgba(255,255,255,0.03);
+
+        }
+
+
+        .stat-number {
+
+            display: block;
+
+            font-size:
+                28px;
+
+            font-weight:
+                700;
+
+            color:
+                var(--pink);
+
+        }
+
+
+        .stat-label {
+
+            color:
+                var(--muted);
+
+            font-size:
+                13px;
+
+        }
+
+
+        .responses {
+
+            display:
+                grid;
+
+            gap:
+                16px;
+
+        }
+
+
+        .response {
+
+            padding:
+                22px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                20px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+        }
+
+
+        .response.unread {
+
+            border-color:
+                rgba(242,154,187,0.6);
+
+            box-shadow:
+                0 0 25px
+                rgba(242,154,187,0.08);
+
+        }
+
+
+        .response-top {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+
+            margin-bottom:
+                14px;
+
+        }
+
+
+        .response-date {
+
+            color:
+                var(--pink-light);
+
+            font-weight:
+                700;
+
+        }
+
+
+        .new {
+
+            display:
+                inline-block;
+
+            margin-left:
+                8px;
+
+            padding:
+                4px 8px;
+
+            border-radius:
+                20px;
+
+            background:
+                rgba(242,154,187,0.15);
+
+            color:
+                var(--pink);
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .response-time {
+
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+
+        }
+
+
+        .response-message {
+
+            margin:
+                0 0 18px;
+
+            white-space:
+                pre-line;
+
+            line-height:
+                1.7;
+
+        }
+
+
+        .mark-read {
+
+            padding:
+                9px 13px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                10px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+            color:
+                var(--pink-light);
+
+        }
+
+
+        .empty {
+
+            padding:
+                50px;
+
+            text-align:
+                center;
+
+            color:
+                var(--muted);
+
+            border:
+                1px dashed var(--border);
+
+            border-radius:
+                20px;
+
+        }
+
+
+        .loading {
+
+            color:
+                var(--muted);
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            header {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .response-top {
+
+                flex-direction:
+                    column;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div
+    id="loginView"
+    class="login-card"
+>
+
+    <h1>
+        🔐 Panel privado
+    </h1>
+
+    <p class="subtitle">
+        Respuestas de Ömrüm
+    </p>
+
+
+    <form id="loginForm">
+
+        <label for="email">
+            Email
+        </label>
+
+        <input
+            id="email"
+            type="email"
+            autocomplete="email"
+            required
+        >
+
+
+        <label for="password">
+            Contraseña
+        </label>
+
+        <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            required
+        >
+
+
+        <button
+            class="login-button"
+            type="submit"
+        >
+            Entrar ❤️
+        </button>
+
+    </form>
+
+
+    <div
+        id="loginError"
+        class="error"
+    ></div>
+
+</div>
+
+
+<div
+    id="adminView"
+    class="container"
+    style="display:none;"
+>
+
+    <header>
+
+        <div>
+
+            <h1>
+                💌 Respuestas de Ömrüm
+            </h1>
+
+            <div class="subtitle">
+                Todos los mensajes que ha dejado en vuestro jardín.
+            </div>
+
+        </div>
+
+
+        <button
+            id="logoutButton"
+            class="logout"
+        >
+            Cerrar sesión
+        </button>
+
+    </header>
+
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <span
+                id="totalCount"
+                class="stat-number"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
+                Respuestas
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span
+                id="unreadCount"
+                class="stat-number"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
+                Sin leer
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span
+                id="readCount"
+                class="stat-number"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
+                Leídas
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <section
+        id="responses"
+        class="responses"
+    >
+
+        <div class="loading">
+            Cargando respuestas...
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+    "https://jqehzruekmlfagyvytsn.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_Q-FkjZiyjIbriXcDUliaVQ__MnqNIhV";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+const loginView =
+    document.getElementById("loginView");
+
+const adminView =
+    document.getElementById("adminView");
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginError =
+    document.getElementById("loginError");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+const responsesContainer =
+    document.getElementById("responses");
+
+const totalCount =
+    document.getElementById("totalCount");
+
+const unreadCount =
+    document.getElementById("unreadCount");
+
+const readCount =
+    document.getElementById("readCount");
+
+
+function formatDate(dateString) {
+
+    const date =
+        new Date(
+            `${dateString}T12:00:00`
+        );
+
+
+    return date.toLocaleDateString(
+        "es-ES",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function formatTime(dateString) {
+
+    const date =
+        new Date(dateString);
+
+
+    return date.toLocaleString(
+        "es-ES",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+function showLogin() {
+
+    loginView.style.display =
+        "block";
+
+    adminView.style.display =
+        "none";
+
+}
+
+
+function showAdmin() {
+
+    loginView.style.display =
+        "none";
+
+    adminView.style.display =
+        "block";
+
+}
+
+
+async function checkSession() {
+
+    const {
+        data
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+    if (data.session) {
+
+        showAdmin();
+
+        loadResponses();
+
+    } else {
+
+        showLogin();
+
+    }
+
+}
+
+
+loginForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        loginError.textContent =
+            "";
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+
+        const button =
+            loginForm.querySelector(
+                "button"
+            );
+
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Entrando...";
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email,
+                    password
+
+                });
+
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Entrar ❤️";
+
+
+        if (error) {
+
+            console.error(error);
+
+            loginError.textContent =
+                "Email o contraseña incorrectos.";
+
+            return;
+
+        }
+
+
+        showAdmin();
+
+        loadResponses();
+
+    }
+);
+
+
+logoutButton.addEventListener(
+    "click",
+    async () => {
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        showLogin();
+
+    }
+);
+
+
+async function loadResponses() {
+
+    responsesContainer.innerHTML =
+        `<div class="loading">
+            Cargando respuestas...
+        </div>`;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("responses")
+            .select(
+                "id,date,message,created_at,read"
+            )
+            .order(
+                "date",
+                {
+                    ascending: false
+                }
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        responsesContainer.innerHTML =
+            `<div class="empty">
+                No se pudieron cargar las respuestas.
+            </div>`;
+
+        return;
+
+    }
+
+
+    renderResponses(
+        data || []
+    );
+
+}
+
+
+function renderResponses(data) {
+
+    totalCount.textContent =
+        data.length;
+
+
+    const unread =
+        data.filter(
+            response => !response.read
+        ).length;
+
+
+    unreadCount.textContent =
+        unread;
+
+
+    readCount.textContent =
+        data.length - unread;
+
+
+    if (!data.length) {
+
+        responsesContainer.innerHTML =
+            `<div class="empty">
+                💌 Todavía no hay respuestas.
+            </div>`;
+
+        return;
+
+    }
+
+
+    responsesContainer.innerHTML =
+        "";
+
+
+    data.forEach(
+        response => {
+
+            const article =
+                document.createElement(
+                    "article"
+                );
+
+
+            article.className =
+                "response";
+
+
+            if (!response.read) {
+
+                article.classList.add(
+                    "unread"
+                );
+
+            }
+
+
+            const top =
+                document.createElement(
+                    "div"
+                );
+
+            top.className =
+                "response-top";
+
+
+            const date =
+                document.createElement(
+                    "div"
+                );
+
+            date.className =
+                "response-date";
+
+            date.textContent =
+                `🌹 ${formatDate(
+                    response.date
+                )}`;
+
+
+            if (!response.read) {
+
+                const badge =
+                    document.createElement(
+                        "span"
+                    );
+
+                badge.className =
+                    "new";
+
+                badge.textContent =
+                    "NUEVA";
+
+                date.appendChild(
+                    badge
+                );
+
+            }
+
+
+            const time =
+                document.createElement(
+                    "div"
+                );
+
+            time.className =
+                "response-time";
+
+            time.textContent =
+                formatTime(
+                    response.created_at
+                );
+
+
+            top.appendChild(date);
+            top.appendChild(time);
+
+
+            const message =
+                document.createElement(
+                    "p"
+                );
+
+            message.className =
+                "response-message";
+
+            message.textContent =
+                response.message;
+
+
+            article.appendChild(top);
+            article.appendChild(message);
+
+
+            if (!response.read) {
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+                button.className =
+                    "mark-read";
+
+                button.textContent =
+                    "✓ Marcar como leída";
+
+
+                button.addEventListener(
+                    "click",
+                    () => markAsRead(
+                        response.id
+                    )
+                );
+
+
+                article.appendChild(
+                    button
+                );
+
+            }
+
+
+            responsesContainer.appendChild(
+                article
+            );
+
+        }
+    );
+
+}
+
+
+async function markAsRead(id) {
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("responses")
+            .update({
+                read: true
+            })
+            .eq(
+                "id",
+                id
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+
+    }
+
+
+    loadResponses();
+
+}
+
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        (event, session) => {
+
+            if (session) {
+
+                showAdmin();
+
+            } else {
+
+                showLogin();
+
+            }
+
+        }
+    );
+
+
+checkSession();
+
+</script>
+
+</body>
+
+</html>
