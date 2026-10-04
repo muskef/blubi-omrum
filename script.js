@@ -40,13 +40,20 @@ const STORAGE_KEY =
 ========================================================= */
 
 const PENDING_PHOTOS_BUCKET =
-    "photo-pending";
+    "pending-photos";
 
 const APPROVED_PHOTOS_BUCKET =
-    "photo-album";
+    "approved-photos";
 
 const MAX_PHOTO_SIZE =
     10 * 1024 * 1024;
+
+const ALLOWED_PHOTO_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif"
+];
 
 
 /* =========================================================
@@ -386,7 +393,6 @@ function getMessage(key) {
     const start =
         START_DATE.getTime();
 
-
     const current =
         new Date(
             Number(key.slice(0, 4)),
@@ -429,10 +435,8 @@ function renderCalendar() {
     const today =
         getToday();
 
-
     const opened =
         getStoredFlowers();
-
 
     const current =
         new Date(START_DATE);
@@ -464,7 +468,6 @@ function renderCalendar() {
         const monthTitle =
             document.createElement("h2");
 
-
         monthTitle.textContent =
             current.toLocaleDateString(
                 "es-ES",
@@ -478,7 +481,6 @@ function renderCalendar() {
         const monthDescription =
             document.createElement("p");
 
-
         monthDescription.textContent =
             "Cada día, una nueva flor.";
 
@@ -490,7 +492,6 @@ function renderCalendar() {
         monthHeader.appendChild(
             monthDescription
         );
-
 
         monthCard.appendChild(
             monthHeader
@@ -576,7 +577,6 @@ function renderCalendar() {
             const cell =
                 document.createElement("button");
 
-
             cell.type =
                 "button";
 
@@ -588,14 +588,11 @@ function renderCalendar() {
                 date.getTime() ===
                 today.getTime();
 
-
             const isFuture =
                 date > today;
 
-
             const isPast =
                 date < today;
-
 
             const isSpecial =
                 key === SPECIAL_LOVE_DATE ||
@@ -713,7 +710,6 @@ function openFlower(date) {
     const today =
         getToday();
 
-
     const key =
         dateKey(date);
 
@@ -742,24 +738,20 @@ function openFlower(date) {
             message.flower;
     }
 
-
     if (modalDate) {
         modalDate.textContent =
             formatDate(date);
     }
-
 
     if (modalTitle) {
         modalTitle.textContent =
             message.title;
     }
 
-
     if (modalMessage) {
         modalMessage.textContent =
             message.text;
     }
-
 
     if (replyMessage) {
         replyMessage.value = "";
@@ -785,13 +777,14 @@ function openFlower(date) {
     ) {
 
         if (modal) {
+
             modal.classList.add(
                 "special-love"
             );
+
         }
 
         createLoveBurst();
-
         playSpecialSound();
 
     }
@@ -947,17 +940,16 @@ async function submitReply() {
 
         const {
             error
-        } = await supabaseClient
-            .from("responses")
-            .insert({
+        } =
+            await supabaseClient
+                .from("responses")
+                .insert({
+                    date:
+                        currentlyOpenedDate,
 
-                date:
-                    currentlyOpenedDate,
-
-                message:
-                    message
-
-            });
+                    message:
+                        message
+                });
 
 
         if (error) {
@@ -965,8 +957,7 @@ async function submitReply() {
         }
 
 
-        replyMessage.value =
-            "";
+        replyMessage.value = "";
 
         updateReplyCounter();
 
@@ -1028,8 +1019,10 @@ if (photoInput) {
             if (!file) {
 
                 if (photoFileName) {
+
                     photoFileName.textContent =
                         "📁 Elegir una foto";
+
                 }
 
                 return;
@@ -1066,21 +1059,22 @@ async function loadApprovedPhotos() {
         const {
             data,
             error
-        } = await supabaseClient
-            .from("photo_submissions")
-            .select(
-                "id, file_path, caption, created_at"
-            )
-            .eq(
-                "status",
-                "approved"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
+        } =
+            await supabaseClient
+                .from("photos")
+                .select(
+                    "id,storage_path,caption,created_at"
+                )
+                .eq(
+                    "status",
+                    "approved"
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
 
 
         if (error) {
@@ -1088,8 +1082,7 @@ async function loadApprovedPhotos() {
         }
 
 
-        photoAlbum.innerHTML =
-            "";
+        photoAlbum.innerHTML = "";
 
 
         if (
@@ -1098,8 +1091,10 @@ async function loadApprovedPhotos() {
         ) {
 
             if (photoAlbumEmpty) {
+
                 photoAlbumEmpty.style.display =
                     "block";
+
             }
 
             return;
@@ -1108,8 +1103,10 @@ async function loadApprovedPhotos() {
 
 
         if (photoAlbumEmpty) {
+
             photoAlbumEmpty.style.display =
                 "none";
+
         }
 
 
@@ -1118,21 +1115,24 @@ async function loadApprovedPhotos() {
 
                 const {
                     data: publicData
-                } = supabaseClient
-                    .storage
-                    .from(
-                        APPROVED_PHOTOS_BUCKET
-                    )
-                    .getPublicUrl(
-                        photo.file_path
-                    );
+                } =
+                    supabaseClient
+                        .storage
+                        .from(
+                            APPROVED_PHOTOS_BUCKET
+                        )
+                        .getPublicUrl(
+                            photo.storage_path
+                        );
 
 
                 if (
                     !publicData ||
                     !publicData.publicUrl
                 ) {
+
                     return;
+
                 }
 
 
@@ -1170,7 +1170,6 @@ async function loadApprovedPhotos() {
                 imageWrapper.appendChild(
                     image
                 );
-
 
                 card.appendChild(
                     imageWrapper
@@ -1240,6 +1239,17 @@ async function loadApprovedPhotos() {
             error
         );
 
+
+        if (photoAlbumEmpty) {
+
+            photoAlbumEmpty.style.display =
+                "block";
+
+            photoAlbumEmpty.textContent =
+                "❌ No se pudo cargar el álbum.";
+
+        }
+
     }
 
 }
@@ -1277,16 +1287,8 @@ async function uploadPhoto() {
     }
 
 
-    const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/gif"
-    ];
-
-
     if (
-        !allowedTypes.includes(
+        !ALLOWED_PHOTO_TYPES.includes(
             file.type
         )
     ) {
@@ -1350,25 +1352,26 @@ async function uploadPhoto() {
 
         const {
             error: uploadError
-        } = await supabaseClient
-            .storage
-            .from(
-                PENDING_PHOTOS_BUCKET
-            )
-            .upload(
-                filePath,
-                file,
-                {
-                    cacheControl:
-                        "3600",
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    PENDING_PHOTOS_BUCKET
+                )
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        cacheControl:
+                            "3600",
 
-                    contentType:
-                        file.type,
+                        contentType:
+                            file.type,
 
-                    upsert:
-                        false
-                }
-            );
+                        upsert:
+                            false
+                    }
+                );
 
 
         if (uploadError) {
@@ -1378,20 +1381,24 @@ async function uploadPhoto() {
 
         const {
             error: databaseError
-        } = await supabaseClient
-            .from("photo_submissions")
-            .insert({
+        } =
+            await supabaseClient
+                .from("photos")
+                .insert({
 
-                file_path:
-                    filePath,
+                    storage_path:
+                        filePath,
 
-                caption:
-                    caption || null,
+                    original_name:
+                        file.name,
 
-                status:
-                    "pending"
+                    caption:
+                        caption || null,
 
-            });
+                    status:
+                        "pending"
+
+                });
 
 
         if (databaseError) {
@@ -1467,35 +1474,6 @@ async function uploadPhoto() {
 
 function getFileExtension(file) {
 
-    const fileName =
-        file.name || "";
-
-
-    const parts =
-        fileName.split(".");
-
-
-    if (
-        parts.length > 1
-    ) {
-
-        const extension =
-            parts
-                .pop()
-                .toLowerCase()
-                .replace(
-                    /[^a-z0-9]/g,
-                    ""
-                );
-
-
-        if (extension) {
-            return extension;
-        }
-
-    }
-
-
     const mimeMap = {
 
         "image/jpeg":
@@ -1559,7 +1537,6 @@ function updateToday() {
     const today =
         getToday();
 
-
     const key =
         dateKey(today);
 
@@ -1604,26 +1581,34 @@ function updateToday() {
 
 
     if (todayDate) {
+
         todayDate.textContent =
             formatDate(today);
+
     }
 
 
     if (dayCounter) {
+
         dayCounter.textContent =
             `Día ${currentDay} de ${totalDays}`;
+
     }
 
 
     if (progressPercent) {
+
         progressPercent.textContent =
             `${percentage}%`;
+
     }
 
 
     if (progressFill) {
+
         progressFill.style.width =
             `${percentage}%`;
+
     }
 
 
@@ -1632,8 +1617,10 @@ function updateToday() {
     ) {
 
         if (todayTitle) {
+
             todayTitle.textContent =
                 "Te amo mucho";
+
         }
 
 
@@ -1656,8 +1643,10 @@ function updateToday() {
     ) {
 
         if (todayTitle) {
+
             todayTitle.textContent =
                 "Para mi Ömrüm";
+
         }
 
 
@@ -1678,8 +1667,10 @@ function updateToday() {
     } else {
 
         if (todayTitle) {
+
             todayTitle.textContent =
                 "Una flor para ti";
+
         }
 
 
@@ -1818,7 +1809,6 @@ function playSpecialSound() {
 
         const oscillator =
             audio.createOscillator();
-
 
         const gain =
             audio.createGain();
