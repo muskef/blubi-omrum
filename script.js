@@ -36,6 +36,20 @@ const STORAGE_KEY =
 
 
 /* =========================================================
+   ÁLBUM
+========================================================= */
+
+const PENDING_PHOTOS_BUCKET =
+    "photo-pending";
+
+const APPROVED_PHOTOS_BUCKET =
+    "photo-album";
+
+const MAX_PHOTO_SIZE =
+    10 * 1024 * 1024;
+
+
+/* =========================================================
    MENSAJES ESPECIALES
 ========================================================= */
 
@@ -229,6 +243,32 @@ const sendReply =
 
 const replyCounter =
     document.getElementById("replyCounter");
+
+
+/* =========================================================
+   ELEMENTOS DEL ÁLBUM
+========================================================= */
+
+const photoInput =
+    document.getElementById("photoInput");
+
+const photoFileName =
+    document.getElementById("photoFileName");
+
+const photoCaption =
+    document.getElementById("photoCaption");
+
+const uploadPhotoButton =
+    document.getElementById("uploadPhotoButton");
+
+const photoUploadStatus =
+    document.getElementById("photoUploadStatus");
+
+const photoAlbum =
+    document.getElementById("photoAlbum");
+
+const photoAlbumEmpty =
+    document.getElementById("photoAlbumEmpty");
 
 
 let currentlyOpenedDate = null;
@@ -972,6 +1012,545 @@ if (sendReply) {
 
 
 /* =========================================================
+   ÁLBUM — NOMBRE DEL ARCHIVO
+========================================================= */
+
+if (photoInput) {
+
+    photoInput.addEventListener(
+        "change",
+        () => {
+
+            const file =
+                photoInput.files?.[0];
+
+
+            if (!file) {
+
+                if (photoFileName) {
+                    photoFileName.textContent =
+                        "📁 Elegir una foto";
+                }
+
+                return;
+
+            }
+
+
+            if (photoFileName) {
+
+                photoFileName.textContent =
+                    `📷 ${file.name}`;
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ÁLBUM — CARGAR FOTOS APROBADAS
+========================================================= */
+
+async function loadApprovedPhotos() {
+
+    if (!photoAlbum) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("photo_submissions")
+            .select(
+                "id, file_path, caption, created_at"
+            )
+            .eq(
+                "status",
+                "approved"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        photoAlbum.innerHTML =
+            "";
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            if (photoAlbumEmpty) {
+                photoAlbumEmpty.style.display =
+                    "block";
+            }
+
+            return;
+
+        }
+
+
+        if (photoAlbumEmpty) {
+            photoAlbumEmpty.style.display =
+                "none";
+        }
+
+
+        data.forEach(
+            photo => {
+
+                const {
+                    data: publicData
+                } = supabaseClient
+                    .storage
+                    .from(
+                        APPROVED_PHOTOS_BUCKET
+                    )
+                    .getPublicUrl(
+                        photo.file_path
+                    );
+
+
+                if (
+                    !publicData ||
+                    !publicData.publicUrl
+                ) {
+                    return;
+                }
+
+
+                const card =
+                    document.createElement("article");
+
+                card.className =
+                    "photo-album-card";
+
+
+                const imageWrapper =
+                    document.createElement("div");
+
+                imageWrapper.className =
+                    "photo-album-image-wrapper";
+
+
+                const image =
+                    document.createElement("img");
+
+                image.className =
+                    "photo-album-image";
+
+                image.src =
+                    publicData.publicUrl;
+
+                image.alt =
+                    photo.caption ||
+                    "Recuerdo de nuestro álbum";
+
+                image.loading =
+                    "lazy";
+
+
+                imageWrapper.appendChild(
+                    image
+                );
+
+
+                card.appendChild(
+                    imageWrapper
+                );
+
+
+                if (
+                    photo.caption &&
+                    photo.caption.trim()
+                ) {
+
+                    const caption =
+                        document.createElement("p");
+
+                    caption.className =
+                        "photo-album-caption";
+
+                    caption.textContent =
+                        photo.caption;
+
+                    card.appendChild(
+                        caption
+                    );
+
+                }
+
+
+                if (photo.created_at) {
+
+                    const date =
+                        document.createElement("small");
+
+                    date.className =
+                        "photo-album-date";
+
+                    date.textContent =
+                        new Date(
+                            photo.created_at
+                        ).toLocaleDateString(
+                            "es-ES",
+                            {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric"
+                            }
+                        );
+
+                    card.appendChild(
+                        date
+                    );
+
+                }
+
+
+                photoAlbum.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando el álbum:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ÁLBUM — SUBIR FOTO
+========================================================= */
+
+async function uploadPhoto() {
+
+    if (
+        !photoInput ||
+        !uploadPhotoButton
+    ) {
+
+        return;
+
+    }
+
+
+    const file =
+        photoInput.files?.[0];
+
+
+    if (!file) {
+
+        showPhotoUploadStatus(
+            "📷 Primero elige una foto.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif"
+    ];
+
+
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
+
+        showPhotoUploadStatus(
+            "❌ Solo puedes subir JPG, PNG, WEBP o GIF.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        file.size > MAX_PHOTO_SIZE
+    ) {
+
+        showPhotoUploadStatus(
+            "❌ La foto no puede superar los 10 MB.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const caption =
+        photoCaption
+            ? photoCaption.value.trim()
+            : "";
+
+
+    uploadPhotoButton.disabled =
+        true;
+
+    uploadPhotoButton.textContent =
+        "📤 Subiendo...";
+
+
+    let filePath =
+        null;
+
+
+    try {
+
+        const extension =
+            getFileExtension(file);
+
+
+        filePath =
+            `${crypto.randomUUID()}.${extension}`;
+
+
+        showPhotoUploadStatus(
+            "📤 Subiendo tu recuerdo...",
+            "loading"
+        );
+
+
+        const {
+            error: uploadError
+        } = await supabaseClient
+            .storage
+            .from(
+                PENDING_PHOTOS_BUCKET
+            )
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl:
+                        "3600",
+
+                    contentType:
+                        file.type,
+
+                    upsert:
+                        false
+                }
+            );
+
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+
+        const {
+            error: databaseError
+        } = await supabaseClient
+            .from("photo_submissions")
+            .insert({
+
+                file_path:
+                    filePath,
+
+                caption:
+                    caption || null,
+
+                status:
+                    "pending"
+
+            });
+
+
+        if (databaseError) {
+
+            await supabaseClient
+                .storage
+                .from(
+                    PENDING_PHOTOS_BUCKET
+                )
+                .remove([
+                    filePath
+                ]);
+
+            throw databaseError;
+
+        }
+
+
+        if (photoInput) {
+            photoInput.value = "";
+        }
+
+
+        if (photoCaption) {
+            photoCaption.value = "";
+        }
+
+
+        if (photoFileName) {
+
+            photoFileName.textContent =
+                "📁 Elegir una foto";
+
+        }
+
+
+        showPhotoUploadStatus(
+            "❤️ Foto enviada. Ahora Blubi tiene que aprobarla antes de que aparezca en el álbum.",
+            "success"
+        );
+
+
+        showToast(
+            "📸 Tu foto ha sido enviada."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error subiendo foto:",
+            error
+        );
+
+
+        showPhotoUploadStatus(
+            "❌ No se pudo enviar la foto. Inténtalo otra vez.",
+            "error"
+        );
+
+    } finally {
+
+        uploadPhotoButton.disabled =
+            false;
+
+        uploadPhotoButton.textContent =
+            "📸 Enviar foto ❤️";
+
+    }
+
+}
+
+
+function getFileExtension(file) {
+
+    const fileName =
+        file.name || "";
+
+
+    const parts =
+        fileName.split(".");
+
+
+    if (
+        parts.length > 1
+    ) {
+
+        const extension =
+            parts
+                .pop()
+                .toLowerCase()
+                .replace(
+                    /[^a-z0-9]/g,
+                    ""
+                );
+
+
+        if (extension) {
+            return extension;
+        }
+
+    }
+
+
+    const mimeMap = {
+
+        "image/jpeg":
+            "jpg",
+
+        "image/png":
+            "png",
+
+        "image/webp":
+            "webp",
+
+        "image/gif":
+            "gif"
+
+    };
+
+
+    return (
+        mimeMap[file.type] ||
+        "jpg"
+    );
+
+}
+
+
+function showPhotoUploadStatus(
+    message,
+    type
+) {
+
+    if (!photoUploadStatus) {
+        return;
+    }
+
+
+    photoUploadStatus.textContent =
+        message;
+
+
+    photoUploadStatus.className =
+        "photo-upload-status";
+
+
+    if (type) {
+
+        photoUploadStatus.classList.add(
+            type
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    HOY
 ========================================================= */
 
@@ -1365,6 +1944,16 @@ if (musicButton) {
 }
 
 
+if (uploadPhotoButton) {
+
+    uploadPhotoButton.addEventListener(
+        "click",
+        uploadPhoto
+    );
+
+}
+
+
 window.addEventListener(
     "scroll",
     () => {
@@ -1562,3 +2151,5 @@ if (backgroundCanvas) {
 updateToday();
 
 renderCalendar();
+
+loadApprovedPhotos();
