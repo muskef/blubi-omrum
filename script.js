@@ -2,6 +2,7 @@ const START_DATE = new Date(2026, 8, 28);
 const END_DATE = new Date(2027, 8, 28);
 
 const SPECIAL_LOVE_DATE = "2026-10-03";
+const SECOND_SPECIAL_LOVE_DATE = "2026-10-04";
 
 const STORAGE_KEY =
     "blubi_omrum_new_calendar_2026_2027";
@@ -23,6 +24,25 @@ const specialMessages = {
             "quiero compartir contigo todo el tiempo que la vida nos dé.",
 
         flower: "🌹",
+        special: true
+    },
+
+    "2026-10-04": {
+        title: "Para mi Ömrüm",
+
+        text:
+            "Ömrüm,\n\n" +
+            "Sé que a veces pienso demasiado y que no siempre hago las cosas perfectas, " +
+            "pero quiero que sepas que eres una de las mejores cosas que me han pasado. " +
+            "Desde que volviste a mi vida has estado en mi cabeza todos los días, " +
+            "tanto en los momentos buenos como en los malos.\n\n" +
+            "Gracias por aguantarme, por escucharme, por hacerme reír y por todos los recuerdos " +
+            "que estamos creando juntos. Puede que no te diga estas cosas muchas veces, " +
+            "pero te quiero muchísimo y me importas más de lo que probablemente imaginas.\n\n" +
+            "Te quiere,\n\n" +
+            "Tu Blubi ❤️",
+
+        flower: "🌷",
         special: true
     }
 
@@ -76,7 +96,6 @@ const modalBackdrop =
 const closeModal =
     document.getElementById("closeModal");
 
-
 const modalFlower =
     document.getElementById("modalFlower");
 
@@ -88,7 +107,6 @@ const modalTitle =
 
 const modalMessage =
     document.getElementById("modalMessage");
-
 
 const todayTitle =
     document.getElementById("todayTitle");
@@ -105,30 +123,23 @@ const progressPercent =
 const progressFill =
     document.getElementById("progressFill");
 
-
 const specialBanner =
     document.getElementById("specialBanner");
-
 
 const toast =
     document.getElementById("toast");
 
-
 const loveBurstContainer =
     document.getElementById("loveBurstContainer");
-
 
 const backTop =
     document.getElementById("backTop");
 
-
 const secretButton =
     document.getElementById("secretButton");
 
-
 const musicButton =
     document.getElementById("musicButton");
-
 
 const backgroundCanvas =
     document.getElementById("backgroundCanvas");
@@ -454,7 +465,8 @@ function renderCalendar() {
 
 
             const isSpecial =
-                key === SPECIAL_LOVE_DATE;
+                key === SPECIAL_LOVE_DATE ||
+                key === SECOND_SPECIAL_LOVE_DATE;
 
 
             if (isToday) {
@@ -538,10 +550,19 @@ function renderCalendar() {
                 "day-mark";
 
 
-            if (isSpecial) {
+            if (
+                key === SPECIAL_LOVE_DATE
+            ) {
 
                 mark.textContent =
                     "TE AMO";
+
+            } else if (
+                key === SECOND_SPECIAL_LOVE_DATE
+            ) {
+
+                mark.textContent =
+                    "PARA TI";
 
             } else if (isToday) {
 
@@ -663,7 +684,8 @@ function openFlower(date) {
 
     if (
         message.special ||
-        key === SPECIAL_LOVE_DATE
+        key === SPECIAL_LOVE_DATE ||
+        key === SECOND_SPECIAL_LOVE_DATE
     ) {
 
         modal.classList.add(
@@ -853,6 +875,33 @@ function updateToday() {
                 <strong>❤️ Hoy es un día especial</strong>
                 <br>
                 <span>Hay una flor especial esperándote.</span>
+            `;
+
+
+            specialBanner.classList.add(
+                "active"
+            );
+
+        }
+
+    } else if (
+        key === SECOND_SPECIAL_LOVE_DATE
+    ) {
+
+        if (todayTitle) {
+
+            todayTitle.textContent =
+                "Para mi Ömrüm";
+
+        }
+
+
+        if (specialBanner) {
+
+            specialBanner.innerHTML = `
+                <strong>❤️ Una pequeña nota para ti</strong>
+                <br>
+                <span>Hoy he dejado algo especial en nuestro jardín.</span>
             `;
 
 
