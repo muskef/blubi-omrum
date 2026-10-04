@@ -1,17 +1,50 @@
-const START_DATE = new Date(2026, 8, 28);
-const END_DATE = new Date(2027, 8, 28);
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-const SPECIAL_LOVE_DATE = "2026-10-03";
-const SECOND_SPECIAL_LOVE_DATE = "2026-10-04";
+const SUPABASE_URL =
+    "https://jqehzruekmlfagyvytsn.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_Q-FkjZiyjIbriXcDUliaVQ__MnqNIhV";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =========================================================
+   CALENDARIO
+========================================================= */
+
+const START_DATE =
+    new Date(2026, 8, 28);
+
+const END_DATE =
+    new Date(2027, 8, 28);
+
+const SPECIAL_LOVE_DATE =
+    "2026-10-03";
+
+const SECOND_SPECIAL_LOVE_DATE =
+    "2026-10-04";
 
 const STORAGE_KEY =
     "blubi_omrum_new_calendar_2026_2027";
 
 
+/* =========================================================
+   MENSAJES ESPECIALES
+========================================================= */
+
 const specialMessages = {
 
     "2026-10-03": {
-        title: "Te amo mucho",
+
+        title:
+            "Te amo mucho",
 
         text:
             "Mi kurdi, te amo un montón. " +
@@ -23,12 +56,19 @@ const specialMessages = {
             "Y aunque me cueste imaginar la vida sin ti, " +
             "quiero compartir contigo todo el tiempo que la vida nos dé.",
 
-        flower: "🌹",
-        special: true
+        flower:
+            "🌹",
+
+        special:
+            true
+
     },
 
+
     "2026-10-04": {
-        title: "Para mi Ömrüm",
+
+        title:
+            "Para mi Ömrüm",
 
         text:
             "Ömrüm,\n\n" +
@@ -42,47 +82,84 @@ const specialMessages = {
             "Te quiere,\n\n" +
             "Tu Blubi ❤️",
 
-        flower: "🌷",
-        special: true
+        flower:
+            "🌷",
+
+        special:
+            true
+
     }
 
 };
 
 
+/* =========================================================
+   MENSAJES NORMALES
+========================================================= */
+
 const normalMessages = [
 
     {
-        title: "Una pequeña flor",
-        text: "Hoy quiero recordarte que eres una persona muy especial para mí.",
-        flower: "🌷"
+        title:
+            "Una pequeña flor",
+
+        text:
+            "Hoy quiero recordarte que eres una persona muy especial para mí.",
+
+        flower:
+            "🌷"
     },
 
     {
-        title: "Para ti",
-        text: "Otra flor para nuestro pequeño jardín. Espero que hoy tengas un día bonito.",
-        flower: "🌸"
+        title:
+            "Para ti",
+
+        text:
+            "Otra flor para nuestro pequeño jardín. Espero que hoy tengas un día bonito.",
+
+        flower:
+            "🌸"
     },
 
     {
-        title: "Un poquito de cariño",
-        text: "A veces las cosas pequeñas son las que terminan significando más.",
-        flower: "🌺"
+        title:
+            "Un poquito de cariño",
+
+        text:
+            "A veces las cosas pequeñas son las que terminan significando más.",
+
+        flower:
+            "🌺"
     },
 
     {
-        title: "Nuestro jardín",
-        text: "Cada día que pasa, esta pequeña colección crece un poquito más.",
-        flower: "🌻"
+        title:
+            "Nuestro jardín",
+
+        text:
+            "Cada día que pasa, esta pequeña colección crece un poquito más.",
+
+        flower:
+            "🌻"
     },
 
     {
-        title: "Siempre tú",
-        text: "Una flor más para recordarte cuánto cariño hay detrás de este jardín.",
-        flower: "🌹"
+        title:
+            "Siempre tú",
+
+        text:
+            "Una flor más para recordarte cuánto cariño hay detrás de este jardín.",
+
+        flower:
+            "🌹"
     }
 
 ];
 
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
 
 const calendar =
     document.getElementById("calendar");
@@ -144,6 +221,22 @@ const musicButton =
 const backgroundCanvas =
     document.getElementById("backgroundCanvas");
 
+const replyMessage =
+    document.getElementById("replyMessage");
+
+const sendReply =
+    document.getElementById("sendReply");
+
+const replyCounter =
+    document.getElementById("replyCounter");
+
+
+let currentlyOpenedDate = null;
+
+
+/* =========================================================
+   FECHAS
+========================================================= */
 
 function normalizeDate(date) {
 
@@ -162,12 +255,14 @@ function dateKey(date) {
         date.getFullYear();
 
     const month =
-        String(date.getMonth() + 1)
-            .padStart(2, "0");
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
 
     const day =
-        String(date.getDate())
-            .padStart(2, "0");
+        String(
+            date.getDate()
+        ).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
 
@@ -196,6 +291,10 @@ function formatDate(date) {
 
 }
 
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
 
 function getStoredFlowers() {
 
@@ -230,6 +329,10 @@ function saveFlower(key) {
 
 }
 
+
+/* =========================================================
+   MENSAJES
+========================================================= */
 
 function getMessage(key) {
 
@@ -269,6 +372,10 @@ function getMessage(key) {
 }
 
 
+/* =========================================================
+   CALENDARIO
+========================================================= */
+
 function renderCalendar() {
 
     if (!calendar) {
@@ -301,27 +408,21 @@ function renderCalendar() {
 
 
         const monthCard =
-            document.createElement(
-                "section"
-            );
+            document.createElement("section");
 
         monthCard.className =
             "month-card";
 
 
         const monthHeader =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         monthHeader.className =
             "month-header";
 
 
         const monthTitle =
-            document.createElement(
-                "h2"
-            );
+            document.createElement("h2");
 
 
         monthTitle.textContent =
@@ -335,9 +436,7 @@ function renderCalendar() {
 
 
         const monthDescription =
-            document.createElement(
-                "p"
-            );
+            document.createElement("p");
 
 
         monthDescription.textContent =
@@ -359,9 +458,7 @@ function renderCalendar() {
 
 
         const grid =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         grid.className =
             "calendar-grid";
@@ -388,9 +485,7 @@ function renderCalendar() {
         ) {
 
             const empty =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             empty.className =
                 "day empty";
@@ -439,9 +534,7 @@ function renderCalendar() {
 
 
             const cell =
-                document.createElement(
-                    "button"
-                );
+                document.createElement("button");
 
 
             cell.type =
@@ -470,54 +563,28 @@ function renderCalendar() {
 
 
             if (isToday) {
-
-                cell.classList.add(
-                    "today"
-                );
-
+                cell.classList.add("today");
             }
-
 
             if (isFuture) {
-
-                cell.classList.add(
-                    "future"
-                );
-
+                cell.classList.add("future");
             }
-
 
             if (isPast) {
-
-                cell.classList.add(
-                    "past"
-                );
-
+                cell.classList.add("past");
             }
-
 
             if (isSpecial) {
-
-                cell.classList.add(
-                    "special-love-day"
-                );
-
+                cell.classList.add("special-love-day");
             }
 
-
             if (opened[key]) {
-
-                cell.classList.add(
-                    "opened"
-                );
-
+                cell.classList.add("opened");
             }
 
 
             const number =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
             number.className =
                 "day-number";
@@ -527,24 +594,17 @@ function renderCalendar() {
 
 
             const flower =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
             flower.className =
                 "flower";
 
-
             flower.textContent =
-                isSpecial
-                    ? "🌹"
-                    : getMessage(key).flower;
+                getMessage(key).flower;
 
 
             const mark =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
             mark.className =
                 "day-mark";
@@ -572,17 +632,9 @@ function renderCalendar() {
             }
 
 
-            cell.appendChild(
-                number
-            );
-
-            cell.appendChild(
-                flower
-            );
-
-            cell.appendChild(
-                mark
-            );
+            cell.appendChild(number);
+            cell.appendChild(flower);
+            cell.appendChild(mark);
 
 
             cell.addEventListener(
@@ -591,21 +643,14 @@ function renderCalendar() {
             );
 
 
-            grid.appendChild(
-                cell
-            );
+            grid.appendChild(cell);
 
         }
 
 
-        monthCard.appendChild(
-            grid
-        );
+        monthCard.appendChild(grid);
 
-
-        calendar.appendChild(
-            monthCard
-        );
+        calendar.appendChild(monthCard);
 
 
         current.setMonth(
@@ -619,6 +664,10 @@ function renderCalendar() {
 }
 
 
+/* =========================================================
+   ABRIR FLOR
+========================================================= */
+
 function openFlower(date) {
 
     const today =
@@ -629,11 +678,7 @@ function openFlower(date) {
         dateKey(date);
 
 
-    const isFuture =
-        date > today;
-
-
-    if (isFuture) {
+    if (date > today) {
 
         showToast(
             "🌱 Esta flor todavía no ha crecido."
@@ -648,38 +693,49 @@ function openFlower(date) {
         getMessage(key);
 
 
-    if (
-        !modal ||
-        !modalFlower ||
-        !modalDate ||
-        !modalTitle ||
-        !modalMessage
-    ) {
+    currentlyOpenedDate =
+        key;
 
-        return;
 
+    if (modalFlower) {
+        modalFlower.textContent =
+            message.flower;
     }
 
 
-    modalFlower.textContent =
-        message.flower;
+    if (modalDate) {
+        modalDate.textContent =
+            formatDate(date);
+    }
 
 
-    modalDate.textContent =
-        formatDate(date);
+    if (modalTitle) {
+        modalTitle.textContent =
+            message.title;
+    }
 
 
-    modalTitle.textContent =
-        message.title;
+    if (modalMessage) {
+        modalMessage.textContent =
+            message.text;
+    }
 
 
-    modalMessage.textContent =
-        message.text;
+    if (replyMessage) {
+        replyMessage.value = "";
+    }
 
 
-    modal.classList.remove(
-        "special-love"
-    );
+    updateReplyCounter();
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "special-love"
+        );
+
+    }
 
 
     if (
@@ -688,13 +744,13 @@ function openFlower(date) {
         key === SECOND_SPECIAL_LOVE_DATE
     ) {
 
-        modal.classList.add(
-            "special-love"
-        );
-
+        if (modal) {
+            modal.classList.add(
+                "special-love"
+            );
+        }
 
         createLoveBurst();
-
 
         playSpecialSound();
 
@@ -704,21 +760,26 @@ function openFlower(date) {
     saveFlower(key);
 
 
-    modal.classList.add(
-        "show"
-    );
+    if (modal) {
 
+        modal.classList.add("show");
 
-    modal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
 
 
     renderCalendar();
 
 }
 
+
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
 
 function closeMessageModal() {
 
@@ -736,6 +797,10 @@ function closeMessageModal() {
         "aria-hidden",
         "true"
     );
+
+
+    currentlyOpenedDate =
+        null;
 
 }
 
@@ -775,6 +840,140 @@ document.addEventListener(
     }
 );
 
+
+/* =========================================================
+   RESPUESTAS → SUPABASE
+========================================================= */
+
+function updateReplyCounter() {
+
+    if (!replyMessage || !replyCounter) {
+        return;
+    }
+
+
+    replyCounter.textContent =
+        `${replyMessage.value.length} / 1000`;
+
+}
+
+
+if (replyMessage) {
+
+    replyMessage.addEventListener(
+        "input",
+        updateReplyCounter
+    );
+
+}
+
+
+async function submitReply() {
+
+    if (
+        !currentlyOpenedDate ||
+        !replyMessage ||
+        !sendReply
+    ) {
+
+        return;
+
+    }
+
+
+    const message =
+        replyMessage.value.trim();
+
+
+    if (!message) {
+
+        showToast(
+            "💌 Escribe algo antes de enviarlo."
+        );
+
+        return;
+
+    }
+
+
+    sendReply.disabled =
+        true;
+
+    sendReply.textContent =
+        "Enviando...";
+
+
+    try {
+
+        const {
+            error
+        } = await supabaseClient
+            .from("responses")
+            .insert({
+
+                date:
+                    currentlyOpenedDate,
+
+                message:
+                    message
+
+            });
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        replyMessage.value =
+            "";
+
+        updateReplyCounter();
+
+
+        showToast(
+            "❤️ Tu mensaje ha llegado a Blubi."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error enviando respuesta:",
+            error
+        );
+
+
+        showToast(
+            "❌ No se pudo enviar. Inténtalo otra vez."
+        );
+
+    } finally {
+
+        sendReply.disabled =
+            false;
+
+        sendReply.textContent =
+            "Enviar ❤️";
+
+    }
+
+}
+
+
+if (sendReply) {
+
+    sendReply.addEventListener(
+        "click",
+        submitReply
+    );
+
+}
+
+
+/* =========================================================
+   HOY
+========================================================= */
 
 function updateToday() {
 
@@ -826,34 +1025,26 @@ function updateToday() {
 
 
     if (todayDate) {
-
         todayDate.textContent =
             formatDate(today);
-
     }
 
 
     if (dayCounter) {
-
         dayCounter.textContent =
             `Día ${currentDay} de ${totalDays}`;
-
     }
 
 
     if (progressPercent) {
-
         progressPercent.textContent =
             `${percentage}%`;
-
     }
 
 
     if (progressFill) {
-
         progressFill.style.width =
             `${percentage}%`;
-
     }
 
 
@@ -862,10 +1053,8 @@ function updateToday() {
     ) {
 
         if (todayTitle) {
-
             todayTitle.textContent =
                 "Te amo mucho";
-
         }
 
 
@@ -876,7 +1065,6 @@ function updateToday() {
                 <br>
                 <span>Hay una flor especial esperándote.</span>
             `;
-
 
             specialBanner.classList.add(
                 "active"
@@ -889,10 +1077,8 @@ function updateToday() {
     ) {
 
         if (todayTitle) {
-
             todayTitle.textContent =
                 "Para mi Ömrüm";
-
         }
 
 
@@ -904,7 +1090,6 @@ function updateToday() {
                 <span>Hoy he dejado algo especial en nuestro jardín.</span>
             `;
 
-
             specialBanner.classList.add(
                 "active"
             );
@@ -914,10 +1099,8 @@ function updateToday() {
     } else {
 
         if (todayTitle) {
-
             todayTitle.textContent =
                 "Una flor para ti";
-
         }
 
 
@@ -925,7 +1108,6 @@ function updateToday() {
 
             specialBanner.innerHTML =
                 "Cada día guarda una pequeña sorpresa.";
-
 
             specialBanner.classList.remove(
                 "active"
@@ -938,6 +1120,10 @@ function updateToday() {
 }
 
 
+/* =========================================================
+   EFECTOS
+========================================================= */
+
 function createLoveBurst() {
 
     if (!loveBurstContainer) {
@@ -945,7 +1131,8 @@ function createLoveBurst() {
     }
 
 
-    loveBurstContainer.innerHTML = "";
+    loveBurstContainer.innerHTML =
+        "";
 
 
     const symbols = [
@@ -964,9 +1151,7 @@ function createLoveBurst() {
     ) {
 
         const particle =
-            document.createElement(
-                "span"
-            );
+            document.createElement("span");
 
 
         particle.className =
@@ -982,66 +1167,33 @@ function createLoveBurst() {
             ];
 
 
-        const x =
-            (
-                Math.random() - 0.5
-            ) * 700;
-
-
-        const y =
-            (
-                Math.random() - 0.5
-            ) * 600;
-
-
-        const rotation =
-            (
-                Math.random() - 0.5
-            ) * 720;
-
-
-        const time =
-            1.5 +
-            Math.random() * 1.4;
-
-
-        const delay =
-            Math.random() * 0.35;
-
-
         particle.style.setProperty(
             "--x",
-            `${x}px`
+            `${(Math.random() - 0.5) * 700}px`
         );
-
 
         particle.style.setProperty(
             "--y",
-            `${y}px`
+            `${(Math.random() - 0.5) * 600}px`
         );
-
 
         particle.style.setProperty(
             "--rotation",
-            `${rotation}deg`
+            `${(Math.random() - 0.5) * 720}deg`
         );
-
 
         particle.style.setProperty(
             "--time",
-            `${time}s`
+            `${1.5 + Math.random() * 1.4}s`
         );
-
 
         particle.style.setProperty(
             "--delay",
-            `${delay}s`
+            `${Math.random() * 0.35}s`
         );
-
 
         particle.style.left =
             "50%";
-
 
         particle.style.top =
             "50%";
@@ -1136,14 +1288,11 @@ function playSpecialSound() {
 
         oscillator.start();
 
-
         oscillator.stop(
             audio.currentTime + 0.7
         );
 
     } catch {
-
-        // El sonido es opcional.
 
     }
 
@@ -1179,6 +1328,10 @@ function showToast(message) {
 
 }
 
+
+/* =========================================================
+   BOTONES
+========================================================= */
 
 if (secretButton) {
 
@@ -1221,9 +1374,7 @@ window.addEventListener(
         }
 
 
-        if (
-            window.scrollY > 500
-        ) {
+        if (window.scrollY > 500) {
 
             backTop.classList.add(
                 "show"
@@ -1258,18 +1409,14 @@ if (backTop) {
 }
 
 
-/* =========================
-   FONDO ANIMADO
-========================= */
-
+/* =========================================================
+   FONDO
+========================================================= */
 
 if (backgroundCanvas) {
 
     const ctx =
-        backgroundCanvas.getContext(
-            "2d"
-        );
-
+        backgroundCanvas.getContext("2d");
 
     let particles = [];
 
@@ -1408,10 +1555,9 @@ if (backgroundCanvas) {
 }
 
 
-/* =========================
+/* =========================================================
    INICIO
-========================= */
-
+========================================================= */
 
 updateToday();
 
