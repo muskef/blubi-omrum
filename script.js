@@ -1063,7 +1063,7 @@ async function loadApprovedPhotos() {
             await supabaseClient
                 .from("photos")
                 .select(
-                    "id,storage_path,caption,created_at"
+                    "id, storage_path, caption, created_at"
                 )
                 .eq(
                     "status",
@@ -1350,6 +1350,10 @@ async function uploadPhoto() {
         );
 
 
+        /* -----------------------------------------------------
+           1. SUBIR FOTO A STORAGE
+        ----------------------------------------------------- */
+
         const {
             error: uploadError
         } =
@@ -1375,9 +1379,25 @@ async function uploadPhoto() {
 
 
         if (uploadError) {
+
+            console.error(
+                "ERROR STORAGE:",
+                uploadError
+            );
+
+            showPhotoUploadStatus(
+                `❌ Error al subir: ${uploadError.message || "Error desconocido"}`,
+                "error"
+            );
+
             throw uploadError;
+
         }
 
+
+        /* -----------------------------------------------------
+           2. GUARDAR REGISTRO EN LA TABLA
+        ----------------------------------------------------- */
 
         const {
             error: databaseError
@@ -1403,6 +1423,17 @@ async function uploadPhoto() {
 
         if (databaseError) {
 
+            console.error(
+                "ERROR DATABASE:",
+                databaseError
+            );
+
+
+            /* -------------------------------------------------
+               Si falla la BD, borramos la foto que acabamos
+               de subir para no dejar archivos huérfanos.
+            ------------------------------------------------- */
+
             await supabaseClient
                 .storage
                 .from(
@@ -1412,18 +1443,34 @@ async function uploadPhoto() {
                     filePath
                 ]);
 
+
+            showPhotoUploadStatus(
+                `❌ Error guardando la foto: ${databaseError.message || "Error desconocido"}`,
+                "error"
+            );
+
             throw databaseError;
 
         }
 
 
+        /* -----------------------------------------------------
+           3. LIMPIAR FORMULARIO
+        ----------------------------------------------------- */
+
         if (photoInput) {
-            photoInput.value = "";
+
+            photoInput.value =
+                "";
+
         }
 
 
         if (photoCaption) {
-            photoCaption.value = "";
+
+            photoCaption.value =
+                "";
+
         }
 
 
@@ -1434,6 +1481,10 @@ async function uploadPhoto() {
 
         }
 
+
+        /* -----------------------------------------------------
+           4. MENSAJE DE ÉXITO
+        ----------------------------------------------------- */
 
         showPhotoUploadStatus(
             "❤️ Foto enviada. Ahora Blubi tiene que aprobarla antes de que aparezca en el álbum.",
@@ -1449,15 +1500,35 @@ async function uploadPhoto() {
     } catch (error) {
 
         console.error(
-            "Error subiendo foto:",
+            "ERROR COMPLETO SUBIENDO FOTO:",
             error
         );
 
 
-        showPhotoUploadStatus(
-            "❌ No se pudo enviar la foto. Inténtalo otra vez.",
-            "error"
-        );
+        /*
+         * Si el mensaje todavía no ha sido mostrado por
+         * alguno de los errores anteriores, mostramos
+         * información útil.
+         */
+
+        if (
+            error &&
+            error.message
+        ) {
+
+            showPhotoUploadStatus(
+                `❌ ${error.message}`,
+                "error"
+            );
+
+        } else {
+
+            showPhotoUploadStatus(
+                "❌ No se pudo enviar la foto. Inténtalo otra vez.",
+                "error"
+            );
+
+        }
 
     } finally {
 
@@ -1471,6 +1542,10 @@ async function uploadPhoto() {
 
 }
 
+
+/* =========================================================
+   EXTENSIÓN DE ARCHIVO
+========================================================= */
 
 function getFileExtension(file) {
 
@@ -1498,6 +1573,10 @@ function getFileExtension(file) {
 
 }
 
+
+/* =========================================================
+   ESTADO DE SUBIDA
+========================================================= */
 
 function showPhotoUploadStatus(
     message,
@@ -1943,6 +2022,10 @@ if (uploadPhotoButton) {
 
 }
 
+
+/* =========================================================
+   SCROLL
+========================================================= */
 
 window.addEventListener(
     "scroll",
