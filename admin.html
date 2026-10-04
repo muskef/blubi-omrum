@@ -10,17 +10,14 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Respuestas de Ömrüm ❤️</title>
+    <title>Panel privado — Blubi ❤️ Ömrüm</title>
 
     <meta
         name="theme-color"
         content="#120b14"
     >
 
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link
         rel="preconnect"
@@ -170,7 +167,7 @@
         .login-card {
 
             width:
-                min(430px, 100%);
+                min(430px, calc(100% - 30px));
 
             margin:
                 100px auto;
@@ -305,7 +302,7 @@
                 15px;
 
             margin-bottom:
-                25px;
+                35px;
 
         }
 
@@ -350,6 +347,51 @@
 
             font-size:
                 13px;
+
+        }
+
+
+        .admin-section {
+
+            margin-top:
+                45px;
+
+        }
+
+
+        .section-heading {
+
+            margin-bottom:
+                20px;
+
+        }
+
+
+        .section-heading h2 {
+
+            margin:
+                0;
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            color:
+                var(--pink-light);
+
+            font-size:
+                30px;
+
+        }
+
+
+        .section-heading p {
+
+            margin:
+                6px 0 0;
+
+            color:
+                var(--muted);
 
         }
 
@@ -524,6 +566,198 @@
         }
 
 
+        /* =====================================================
+           FOTOS PENDIENTES
+        ====================================================== */
+
+        .pending-photos {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap:
+                20px;
+
+        }
+
+
+        .pending-photo {
+
+            overflow:
+                hidden;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                20px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+        }
+
+
+        .pending-photo-image-wrapper {
+
+            width:
+                100%;
+
+            aspect-ratio:
+                1 / 1;
+
+            overflow:
+                hidden;
+
+            background:
+                rgba(0,0,0,0.25);
+
+        }
+
+
+        .pending-photo-image {
+
+            width:
+                100%;
+
+            height:
+                100%;
+
+            display:
+                block;
+
+            object-fit:
+                cover;
+
+        }
+
+
+        .pending-photo-content {
+
+            padding:
+                18px;
+
+        }
+
+
+        .pending-photo-name {
+
+            color:
+                var(--pink-light);
+
+            font-weight:
+                700;
+
+            word-break:
+                break-word;
+
+        }
+
+
+        .pending-photo-caption {
+
+            margin:
+                8px 0;
+
+            color:
+                var(--text);
+
+            line-height:
+                1.5;
+
+        }
+
+
+        .pending-photo-date {
+
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+
+        }
+
+
+        .photo-actions {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                10px;
+
+            margin-top:
+                16px;
+
+        }
+
+
+        .approve-button,
+        .reject-button {
+
+            padding:
+                11px;
+
+            border:
+                none;
+
+            border-radius:
+                11px;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .approve-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #78c99a,
+                    #b4edc8
+                );
+
+            color:
+                #102016;
+
+        }
+
+
+        .reject-button {
+
+            background:
+                rgba(255,120,140,0.12);
+
+            border:
+                1px solid rgba(255,120,140,0.25);
+
+            color:
+                #ffb0bb;
+
+        }
+
+
+        .approve-button:disabled,
+        .reject-button:disabled {
+
+            opacity:
+                0.5;
+
+            cursor:
+                wait;
+
+        }
+
+
         @media (max-width: 650px) {
 
             header {
@@ -549,6 +783,14 @@
 
                 flex-direction:
                     column;
+
+            }
+
+
+            .pending-photos {
+
+                grid-template-columns:
+                    1fr;
 
             }
 
@@ -631,11 +873,11 @@
         <div>
 
             <h1>
-                💌 Respuestas de Ömrüm
+                💌 Panel de Ömrüm
             </h1>
 
             <div class="subtitle">
-                Todos los mensajes que ha dejado en vuestro jardín.
+                Respuestas y recuerdos enviados a vuestro jardín.
             </div>
 
         </div>
@@ -644,12 +886,15 @@
         <button
             id="logoutButton"
             class="logout"
+            type="button"
         >
             Cerrar sesión
         </button>
 
     </header>
 
+
+    <!-- ESTADÍSTICAS -->
 
     <section class="stats">
 
@@ -688,14 +933,14 @@
         <div class="stat">
 
             <span
-                id="readCount"
+                id="pendingCount"
                 class="stat-number"
             >
                 0
             </span>
 
             <span class="stat-label">
-                Leídas
+                Fotos pendientes
             </span>
 
         </div>
@@ -703,14 +948,64 @@
     </section>
 
 
-    <section
-        id="responses"
-        class="responses"
-    >
+    <!-- RESPUESTAS -->
 
-        <div class="loading">
-            Cargando respuestas...
+    <section class="admin-section">
+
+        <div class="section-heading">
+
+            <h2>
+                💌 Respuestas
+            </h2>
+
+            <p>
+                Todos los mensajes que ha dejado en vuestro jardín.
+            </p>
+
         </div>
+
+
+        <section
+            id="responses"
+            class="responses"
+        >
+
+            <div class="loading">
+                Cargando respuestas...
+            </div>
+
+        </section>
+
+    </section>
+
+
+    <!-- FOTOS PENDIENTES -->
+
+    <section class="admin-section">
+
+        <div class="section-heading">
+
+            <h2>
+                📸 Fotos pendientes
+            </h2>
+
+            <p>
+                Revisa los recuerdos antes de que aparezcan en el álbum.
+            </p>
+
+        </div>
+
+
+        <section
+            id="pendingPhotos"
+            class="pending-photos"
+        >
+
+            <div class="loading">
+                Cargando fotos...
+            </div>
+
+        </section>
 
     </section>
 
@@ -731,6 +1026,13 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_ANON_KEY
     );
+
+
+const PENDING_PHOTOS_BUCKET =
+    "pending-photos";
+
+const APPROVED_PHOTOS_BUCKET =
+    "approved-photos";
 
 
 const loginView =
@@ -757,9 +1059,16 @@ const totalCount =
 const unreadCount =
     document.getElementById("unreadCount");
 
-const readCount =
-    document.getElementById("readCount");
+const pendingCount =
+    document.getElementById("pendingCount");
 
+const pendingPhotosContainer =
+    document.getElementById("pendingPhotos");
+
+
+/* =========================================================
+   FECHAS
+========================================================= */
 
 function formatDate(dateString) {
 
@@ -801,6 +1110,10 @@ function formatTime(dateString) {
 }
 
 
+/* =========================================================
+   LOGIN
+========================================================= */
+
 function showLogin() {
 
     loginView.style.display =
@@ -837,7 +1150,10 @@ async function checkSession() {
 
         showAdmin();
 
-        loadResponses();
+        await Promise.all([
+            loadResponses(),
+            loadPendingPhotos()
+        ]);
 
     } else {
 
@@ -918,7 +1234,11 @@ loginForm.addEventListener(
 
         showAdmin();
 
-        loadResponses();
+
+        await Promise.all([
+            loadResponses(),
+            loadPendingPhotos()
+        ]);
 
     }
 );
@@ -937,6 +1257,10 @@ logoutButton.addEventListener(
     }
 );
 
+
+/* =========================================================
+   RESPUESTAS
+========================================================= */
 
 async function loadResponses() {
 
@@ -1004,10 +1328,6 @@ function renderResponses(data) {
 
     unreadCount.textContent =
         unread;
-
-
-    readCount.textContent =
-        data.length - unread;
 
 
     if (!data.length) {
@@ -1194,10 +1514,617 @@ async function markAsRead(id) {
 }
 
 
+/* =========================================================
+   FOTOS PENDIENTES
+========================================================= */
+
+async function loadPendingPhotos() {
+
+    pendingPhotosContainer.innerHTML =
+        `<div class="loading">
+            Cargando fotos...
+        </div>`;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("photos")
+            .select(
+                "id,storage_path,original_name,caption,status,created_at"
+            )
+            .eq(
+                "status",
+                "pending"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Error cargando fotos pendientes:",
+            error
+        );
+
+
+        pendingPhotosContainer.innerHTML =
+            `<div class="empty">
+                ❌ No se pudieron cargar las fotos pendientes.
+            </div>`;
+
+
+        return;
+
+    }
+
+
+    pendingCount.textContent =
+        data?.length || 0;
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        pendingPhotosContainer.innerHTML =
+            `<div class="empty">
+                🌸 No hay fotos pendientes.
+            </div>`;
+
+        return;
+
+    }
+
+
+    pendingPhotosContainer.innerHTML =
+        "";
+
+
+    for (
+        const photo of data
+    ) {
+
+        await renderPendingPhoto(
+            photo
+        );
+
+    }
+
+}
+
+
+async function renderPendingPhoto(photo) {
+
+    const {
+        data: signedData,
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from(
+                PENDING_PHOTOS_BUCKET
+            )
+            .createSignedUrl(
+                photo.storage_path,
+                3600
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Error creando URL de foto:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+    card.className =
+        "pending-photo";
+
+
+    const imageWrapper =
+        document.createElement(
+            "div"
+        );
+
+    imageWrapper.className =
+        "pending-photo-image-wrapper";
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+    image.className =
+        "pending-photo-image";
+
+    image.src =
+        signedData.signedUrl;
+
+    image.alt =
+        photo.caption ||
+        "Foto pendiente";
+
+    image.loading =
+        "lazy";
+
+
+    imageWrapper.appendChild(
+        image
+    );
+
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+    content.className =
+        "pending-photo-content";
+
+
+    const name =
+        document.createElement(
+            "div"
+        );
+
+    name.className =
+        "pending-photo-name";
+
+    name.textContent =
+        photo.original_name ||
+        "Foto sin nombre";
+
+
+    const caption =
+        document.createElement(
+            "p"
+        );
+
+    caption.className =
+        "pending-photo-caption";
+
+    caption.textContent =
+        photo.caption ||
+        "Sin texto añadido.";
+
+
+    const date =
+        document.createElement(
+            "div"
+        );
+
+    date.className =
+        "pending-photo-date";
+
+    date.textContent =
+        formatTime(
+            photo.created_at
+        );
+
+
+    const actions =
+        document.createElement(
+            "div"
+        );
+
+    actions.className =
+        "photo-actions";
+
+
+    const approveButton =
+        document.createElement(
+            "button"
+        );
+
+    approveButton.className =
+        "approve-button";
+
+    approveButton.type =
+        "button";
+
+    approveButton.textContent =
+        "✓ Aprobar";
+
+
+    const rejectButton =
+        document.createElement(
+            "button"
+        );
+
+    rejectButton.className =
+        "reject-button";
+
+    rejectButton.type =
+        "button";
+
+    rejectButton.textContent =
+        "✕ Rechazar";
+
+
+    approveButton.addEventListener(
+        "click",
+        () => approvePhoto(
+            photo,
+            approveButton,
+            rejectButton
+        )
+    );
+
+
+    rejectButton.addEventListener(
+        "click",
+        () => rejectPhoto(
+            photo,
+            approveButton,
+            rejectButton
+        )
+    );
+
+
+    actions.appendChild(
+        approveButton
+    );
+
+    actions.appendChild(
+        rejectButton
+    );
+
+
+    content.appendChild(name);
+    content.appendChild(caption);
+    content.appendChild(date);
+    content.appendChild(actions);
+
+
+    card.appendChild(
+        imageWrapper
+    );
+
+    card.appendChild(
+        content
+    );
+
+
+    pendingPhotosContainer.appendChild(
+        card
+    );
+
+}
+
+
+async function approvePhoto(
+    photo,
+    approveButton,
+    rejectButton
+) {
+
+    approveButton.disabled =
+        true;
+
+    rejectButton.disabled =
+        true;
+
+    approveButton.textContent =
+        "Aprobando...";
+
+
+    try {
+
+        /*
+         * 1. Descargar la imagen privada
+         */
+
+        const {
+            data: fileData,
+            error: downloadError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    PENDING_PHOTOS_BUCKET
+                )
+                .download(
+                    photo.storage_path
+                );
+
+
+        if (downloadError) {
+            throw downloadError;
+        }
+
+
+        /*
+         * 2. Subirla al bucket público
+         */
+
+        const {
+            error: uploadError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    APPROVED_PHOTOS_BUCKET
+                )
+                .upload(
+                    photo.storage_path,
+                    fileData,
+                    {
+                        contentType:
+                            fileData.type ||
+                            "image/jpeg",
+
+                        cacheControl:
+                            "31536000",
+
+                        upsert:
+                            false
+                    }
+                );
+
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+
+        /*
+         * 3. Obtener usuario administrador
+         */
+
+        const {
+            data: userData,
+            error: userError
+        } =
+            await supabaseClient
+                .auth
+                .getUser();
+
+
+        if (userError) {
+            throw userError;
+        }
+
+
+        /*
+         * 4. Marcar como aprobada
+         */
+
+        const {
+            error: updateError
+        } =
+            await supabaseClient
+                .from("photos")
+                .update({
+
+                    status:
+                        "approved",
+
+                    approved_at:
+                        new Date().toISOString(),
+
+                    approved_by:
+                        userData.user?.id || null
+
+                })
+                .eq(
+                    "id",
+                    photo.id
+                );
+
+
+        if (updateError) {
+
+            /*
+             * Rollback del archivo público
+             */
+
+            await supabaseClient
+                .storage
+                .from(
+                    APPROVED_PHOTOS_BUCKET
+                )
+                .remove([
+                    photo.storage_path
+                ]);
+
+            throw updateError;
+
+        }
+
+
+        /*
+         * 5. Eliminar archivo privado
+         */
+
+        const {
+            error: deleteError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    PENDING_PHOTOS_BUCKET
+                )
+                .remove([
+                    photo.storage_path
+                ]);
+
+
+        if (deleteError) {
+
+            console.warn(
+                "La foto fue aprobada pero no se pudo eliminar la copia pendiente:",
+                deleteError
+            );
+
+        }
+
+
+        await loadPendingPhotos();
+
+
+    } catch (error) {
+
+        console.error(
+            "Error aprobando foto:",
+            error
+        );
+
+
+        alert(
+            "No se pudo aprobar la foto. Revisa la consola."
+        );
+
+
+        approveButton.disabled =
+            false;
+
+        rejectButton.disabled =
+            false;
+
+        approveButton.textContent =
+            "✓ Aprobar";
+
+    }
+
+}
+
+
+async function rejectPhoto(
+    photo,
+    approveButton,
+    rejectButton
+) {
+
+    const confirmed =
+        window.confirm(
+            "¿Seguro que quieres rechazar esta foto?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    approveButton.disabled =
+        true;
+
+    rejectButton.disabled =
+        true;
+
+    rejectButton.textContent =
+        "Rechazando...";
+
+
+    try {
+
+        /*
+         * 1. Eliminar archivo pendiente
+         */
+
+        const {
+            error: deleteError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    PENDING_PHOTOS_BUCKET
+                )
+                .remove([
+                    photo.storage_path
+                ]);
+
+
+        if (deleteError) {
+            throw deleteError;
+        }
+
+
+        /*
+         * 2. Mantener registro como rechazado
+         */
+
+        const {
+            error: updateError
+        } =
+            await supabaseClient
+                .from("photos")
+                .update({
+                    status:
+                        "rejected"
+                })
+                .eq(
+                    "id",
+                    photo.id
+                );
+
+
+        if (updateError) {
+            throw updateError;
+        }
+
+
+        await loadPendingPhotos();
+
+
+    } catch (error) {
+
+        console.error(
+            "Error rechazando foto:",
+            error
+        );
+
+
+        alert(
+            "No se pudo rechazar la foto. Revisa la consola."
+        );
+
+
+        approveButton.disabled =
+            false;
+
+        rejectButton.disabled =
+            false;
+
+        rejectButton.textContent =
+            "✕ Rechazar";
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
 supabaseClient
     .auth
     .onAuthStateChange(
-        (event, session) => {
+        (
+            event,
+            session
+        ) => {
 
             if (session) {
 
