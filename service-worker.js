@@ -1,4 +1,4 @@
-const CACHE_NAME = "blubi-omrum-v3";
+const CACHE_NAME = "blubi-omrum-v4";
 
 const FILES_TO_CACHE = [
     "./",
@@ -9,77 +9,128 @@ const FILES_TO_CACHE = [
 ];
 
 
-self.addEventListener(
-    "install",
-    event => {
+/* =========================
+   INSTALACIÓN
+========================= */
 
-        event.waitUntil(
-            caches
-                .open(CACHE_NAME)
-                .then(cache => {
+self.addEventListener("install", event => {
 
-                    return cache.addAll(
-                        FILES_TO_CACHE
-                    );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(FILES_TO_CACHE);
+            })
+    );
 
-                })
-        );
-
-        self.skipWaiting();
-    }
-);
+    self.skipWaiting();
+});
 
 
-self.addEventListener(
-    "activate",
-    event => {
+/* =========================
+   ACTIVACIÓN
+========================= */
 
-        event.waitUntil(
+self.addEventListener("activate", event => {
 
-            caches.keys()
-                .then(keys => {
+    event.waitUntil(
 
-                    return Promise.all(
+        caches.keys()
+            .then(keys => {
 
-                        keys
-                            .filter(
-                                key =>
-                                    key !== CACHE_NAME
-                            )
-                            .map(
-                                key =>
-                                    caches.delete(key)
-                            )
+                return Promise.all(
 
-                    );
+                    keys
+                        .filter(key => key !== CACHE_NAME)
+                        .map(key => caches.delete(key))
 
-                })
+                );
 
-        );
+            })
+            .then(() => {
 
-        self.clients.claim();
-    }
-);
+                return self.clients.claim();
+
+            })
+
+    );
+});
 
 
-self.addEventListener(
-    "fetch",
-    event => {
+/* =========================
+   PETICIONES
+========================= */
+
+self.addEventListener("fetch", event => {
+
+    const request = event.request;
+
+    /*
+       Para HTML, CSS y JS:
+       primero intenta descargar la versión
+       nueva desde GitHub Pages.
+    */
+
+    if (
+        request.method === "GET" &&
+        (
+            request.destination === "document" ||
+            request.destination === "script" ||
+            request.destination === "style"
+        )
+    ) {
 
         event.respondWith(
 
-            caches
-                .match(event.request)
-                .then(cachedResponse => {
+            fetch(request)
+                .then(response => {
 
-                    return (
-                        cachedResponse ||
-                        fetch(event.request)
-                    );
+                    if (response && response.ok) {
+
+                        const responseClone =
+                            response.clone();
+
+                        caches.open(CACHE_NAME)
+                            .then(cache => {
+                                cache.put(
+                                    request,
+                                    responseClone
+                                );
+                            });
+
+                    }
+
+                    return response;
+
+                })
+                .catch(() => {
+
+                    return caches.match(request);
 
                 })
 
         );
 
+        return;
     }
-);
+
+
+    /*
+       Para imágenes, fuentes, manifest, etc.:
+       usamos caché primero y red como respaldo.
+    */
+
+    event.respondWith(
+
+        caches.match(request)
+            .then(cachedResponse => {
+
+                return (
+                    cachedResponse ||
+                    fetch(request)
+                );
+
+            })
+
+    );
+
+});
