@@ -180,9 +180,7 @@ header {
 }
 
 
-/* =========================================================
-   HERO
-========================================================= */
+/* HERO */
 
 .hero {
 
@@ -250,9 +248,7 @@ header {
 }
 
 
-/* =========================================================
-   TODAY
-========================================================= */
+/* TODAY */
 
 .today-card {
 
@@ -419,9 +415,7 @@ header {
 }
 
 
-/* =========================================================
-   SECTIONS
-========================================================= */
+/* SECTIONS */
 
 .calendar-section,
 .album-section,
@@ -462,9 +456,7 @@ header {
 }
 
 
-/* =========================================================
-   MONTH
-========================================================= */
+/* MONTH */
 
 .month-card {
 
@@ -601,9 +593,7 @@ header {
 
 
 .flower {
-
     font-size: 25px;
-
 }
 
 
@@ -668,21 +658,13 @@ header {
    ÁLBUM
 ========================================================= */
 
-.album-section {
-
-    position: relative;
-
-}
-
-
 .album-upload-card {
 
-    max-width: 720px;
+    max-width: 650px;
 
-    margin:
-        0 auto 35px;
+    margin: 0 auto 35px;
 
-    padding: 32px;
+    padding: 30px;
 
     border:
         1px solid rgba(242,154,187,0.18);
@@ -694,35 +676,22 @@ header {
         linear-gradient(
             145deg,
             rgba(47,25,48,0.72),
-            rgba(27,15,29,0.75)
+            rgba(27,15,29,0.8)
         );
 
-    box-shadow:
-        0 20px 60px rgba(0,0,0,0.2);
-
     text-align: center;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.25);
 
 }
 
 
 .album-upload-icon {
 
-    display: grid;
+    font-size: 48px;
 
-    place-items: center;
-
-    width: 70px;
-    height: 70px;
-
-    margin:
-        0 auto 15px;
-
-    border-radius: 20px;
-
-    background:
-        rgba(242,154,187,0.1);
-
-    font-size: 34px;
+    margin-bottom: 10px;
 
 }
 
@@ -746,7 +715,7 @@ header {
 
 .album-upload-card > p {
 
-    max-width: 520px;
+    max-width: 500px;
 
     margin:
         0 auto 22px;
@@ -754,53 +723,47 @@ header {
     color:
         var(--muted);
 
-    line-height: 1.7;
+    line-height:
+        1.7;
 
-    font-size: 14px;
+    font-size:
+        14px;
 
 }
 
 
 .photo-file-input {
 
-    position: absolute;
-
-    width: 1px;
-    height: 1px;
-
-    opacity: 0;
-
-    pointer-events: none;
+    display: none;
 
 }
 
 
 .photo-file-label {
 
-    display: flex;
+    display: inline-flex;
 
     align-items: center;
 
     justify-content: center;
 
-    min-height: 52px;
+    min-height: 48px;
 
     padding:
-        12px 18px;
+        0 20px;
 
     border:
-        1px dashed rgba(242,154,187,0.4);
+        1px solid rgba(242,154,187,0.35);
 
-    border-radius:
-        15px;
+    border-radius: 13px;
 
     background:
-        rgba(242,154,187,0.045);
+        rgba(242,154,187,0.08);
 
     color:
         var(--pink-light);
 
-    font-weight: 600;
+    font-weight: 700;
 
     cursor: pointer;
 
@@ -812,14 +775,11 @@ header {
 
 .photo-file-label:hover {
 
-    border-color:
-        var(--pink);
+    transform:
+        translateY(-2px);
 
     background:
-        rgba(242,154,187,0.09);
-
-    transform:
-        translateY(-1px);
+        rgba(242,154,187,0.14);
 
 }
 
@@ -828,16 +788,14 @@ header {
 
     width: 100%;
 
-    margin-top: 12px;
+    margin-top: 14px;
 
-    padding:
-        14px 15px;
+    padding: 13px 15px;
 
     border:
         1px solid var(--border);
 
-    border-radius:
-        14px;
+    border-radius: 13px;
 
     outline: none;
 
@@ -847,8 +805,6 @@ header {
     color:
         var(--text);
 
-    font-size: 14px;
-
 }
 
 
@@ -856,9 +812,6 @@ header {
 
     border-color:
         var(--pink);
-
-    box-shadow:
-        0 0 0 3px rgba(242,154,187,0.06);
 
 }
 
@@ -875,16 +828,14 @@ header {
 
     width: 100%;
 
-    margin-top: 12px;
+    margin-top: 14px;
 
     padding:
-        14px 20px;
+        13px 18px;
 
-    border:
-        none;
+    border: none;
 
-    border-radius:
-        14px;
+    border-radius: 13px;
 
     background:
         linear-gradient(
@@ -899,9 +850,6 @@ header {
     font-weight:
         700;
 
-    font-size:
-        14px;
-
     transition:
         0.2s ease;
 
@@ -912,9 +860,6 @@ header {
 
     transform:
         translateY(-2px);
-
-    box-shadow:
-        0 10px 25px rgba(201,99,141,0.22);
 
 }
 
@@ -932,16 +877,14 @@ header {
 
 .photo-upload-status {
 
-    min-height: 20px;
+    min-height:
+        20px;
 
     margin:
-        13px 0 0;
-
-    color:
-        var(--muted);
+        14px 0 0;
 
     font-size:
-        12px;
+        13px;
 
     line-height:
         1.5;
@@ -952,7 +895,7 @@ header {
 .photo-upload-status.success {
 
     color:
-        #e9b8cb;
+        #b9f2ca;
 
 }
 
@@ -973,8 +916,6 @@ header {
 }
 
 
-/* GRID DEL ÁLBUM */
-
 .photo-album-grid {
 
     display: grid;
@@ -982,7 +923,8 @@ header {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 20px;
+    gap:
+        18px;
 
 }
 
@@ -998,10 +940,14 @@ header {
         20px;
 
     background:
-        rgba(255,255,255,0.025);
+        rgba(255,255,255,0.035);
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,0.18);
 
     transition:
-        0.25s ease;
+        transform 0.2s ease,
+        border-color 0.2s ease;
 
 }
 
@@ -1014,15 +960,10 @@ header {
     border-color:
         rgba(242,154,187,0.35);
 
-    box-shadow:
-        0 18px 45px rgba(0,0,0,0.25);
-
 }
 
 
 .photo-album-image-wrapper {
-
-    position: relative;
 
     width: 100%;
 
@@ -1032,22 +973,22 @@ header {
     overflow: hidden;
 
     background:
-        rgba(0,0,0,0.15);
+        rgba(0,0,0,0.25);
 
 }
 
 
 .photo-album-image {
 
+    display: block;
+
     width: 100%;
     height: 100%;
-
-    display: block;
 
     object-fit: cover;
 
     transition:
-        transform 0.35s ease;
+        transform 0.4s ease;
 
 }
 
@@ -1064,16 +1005,16 @@ header {
 .photo-album-caption {
 
     margin:
-        13px 15px 5px;
+        13px 14px 5px;
 
     color:
         var(--text);
 
-    font-size:
-        14px;
-
     line-height:
         1.5;
+
+    font-size:
+        14px;
 
 }
 
@@ -1083,7 +1024,7 @@ header {
     display: block;
 
     margin:
-        0 15px 14px;
+        0 14px 14px;
 
     color:
         var(--muted);
@@ -1097,29 +1038,24 @@ header {
 .photo-album-empty {
 
     padding:
-        30px 20px;
+        35px 20px;
+
+    text-align:
+        center;
+
+    color:
+        var(--muted);
 
     border:
         1px dashed var(--border);
 
     border-radius:
-        18px;
-
-    color:
-        var(--muted);
-
-    text-align:
-        center;
-
-    font-size:
-        14px;
+        20px;
 
 }
 
 
-/* =========================================================
-   FUTURE
-========================================================= */
+/* FUTURE */
 
 .seed-grid {
 
@@ -1178,9 +1114,7 @@ header {
 }
 
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* MODAL */
 
 .modal {
 
@@ -1329,21 +1263,16 @@ header {
     white-space:
         pre-line;
 
-    color:
-        var(--text);
+    color: var(--text);
 
-    line-height:
-        1.85;
+    line-height: 1.85;
 
-    text-align:
-        left;
+    text-align: left;
 
 }
 
 
-/* =========================================================
-   RESPUESTA
-========================================================= */
+/* RESPUESTA */
 
 .reply-box {
 
@@ -1366,14 +1295,11 @@ header {
 
 .reply-title {
 
-    color:
-        var(--pink-light);
+    color: var(--pink-light);
 
-    font-size:
-        18px;
+    font-size: 18px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 
 }
 
@@ -1383,11 +1309,9 @@ header {
     margin:
         5px 0 14px;
 
-    color:
-        var(--muted);
+    color: var(--muted);
 
-    font-size:
-        13px;
+    font-size: 13px;
 
 }
 
@@ -1412,8 +1336,7 @@ header {
     background:
         rgba(0,0,0,0.18);
 
-    color:
-        var(--text);
+    color: var(--text);
 
     font-size: 14px;
 
@@ -1448,13 +1371,6 @@ header {
 }
 
 
-.reply-counter {
-
-    color: var(--muted);
-
-}
-
-
 #replyCounter {
 
     color: var(--muted);
@@ -1480,22 +1396,18 @@ header {
             var(--pink)
         );
 
-    color:
-        #210d17;
+    color: #210d17;
 
-    font-weight:
-        700;
+    font-weight: 700;
 
 }
 
 
 .reply-button:disabled {
 
-    opacity:
-        0.55;
+    opacity: 0.55;
 
-    cursor:
-        wait;
+    cursor: wait;
 
 }
 
@@ -1504,8 +1416,7 @@ header {
 
     margin-top: 25px;
 
-    color:
-        var(--muted);
+    color: var(--muted);
 
     font-family:
         "Playfair Display",
@@ -1514,9 +1425,7 @@ header {
 }
 
 
-/* =========================================================
-   TOAST
-========================================================= */
+/* TOAST */
 
 #toast {
 
@@ -1537,8 +1446,7 @@ header {
     border:
         1px solid var(--border);
 
-    border-radius:
-        14px;
+    border-radius: 14px;
 
     background:
         #241326;
@@ -1549,8 +1457,7 @@ header {
     box-shadow:
         var(--shadow);
 
-    opacity:
-        0;
+    opacity: 0;
 
     transition:
         0.3s ease;
@@ -1563,15 +1470,12 @@ header {
     transform:
         translate(-50%, 0);
 
-    opacity:
-        1;
+    opacity: 1;
 
 }
 
 
-/* =========================================================
-   BURST
-========================================================= */
+/* BURST */
 
 .love-burst-container {
 
@@ -1603,9 +1507,7 @@ header {
 }
 
 
-/* =========================================================
-   BACK TOP
-========================================================= */
+/* BACK TOP */
 
 #backTop {
 
@@ -1627,14 +1529,11 @@ header {
     background:
         rgba(27,16,29,0.9);
 
-    color:
-        var(--pink-light);
+    color: var(--pink-light);
 
-    opacity:
-        0;
+    opacity: 0;
 
-    pointer-events:
-        none;
+    pointer-events: none;
 
     transition:
         0.2s ease;
@@ -1644,45 +1543,35 @@ header {
 
 #backTop.show {
 
-    opacity:
-        1;
+    opacity: 1;
 
-    pointer-events:
-        auto;
+    pointer-events: auto;
 
 }
 
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* FOOTER */
 
 footer {
 
     padding:
         50px 0;
 
-    text-align:
-        center;
+    text-align: center;
 
-    color:
-        var(--muted);
+    color: var(--muted);
 
-    line-height:
-        1.8;
+    line-height: 1.8;
 
 }
 
 
 footer strong {
-    color:
-        var(--pink-light);
+    color: var(--pink-light);
 }
 
 
-/* =========================================================
-   ANIMACIONES
-========================================================= */
+/* ANIMACIONES */
 
 @keyframes specialDayRing {
 
@@ -1730,9 +1619,7 @@ footer strong {
 }
 
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* MOBILE */
 
 @media (max-width: 700px) {
 
@@ -1818,15 +1705,16 @@ footer strong {
         grid-template-columns:
             repeat(2, 1fr);
 
-        gap: 12px;
+        gap:
+            10px;
 
     }
 
 
-    .album-upload-card {
+    .photo-album-card {
 
-        padding:
-            24px 18px;
+        border-radius:
+            15px;
 
     }
 
@@ -1834,7 +1722,7 @@ footer strong {
     .photo-album-caption {
 
         margin:
-            10px 11px 4px;
+            10px;
 
         font-size:
             12px;
@@ -1845,10 +1733,7 @@ footer strong {
     .photo-album-date {
 
         margin:
-            0 11px 11px;
-
-        font-size:
-            9px;
+            0 10px 10px;
 
     }
 
@@ -1877,18 +1762,6 @@ footer strong {
 
     .reply-button {
         width: 100%;
-    }
-
-}
-
-
-@media (max-width: 420px) {
-
-    .photo-album-grid {
-
-        grid-template-columns:
-            1fr;
-
     }
 
 }
