@@ -163,6 +163,100 @@
     </main>
 
 
+    <!-- =====================================================
+         ÁLBUM
+    ====================================================== -->
+
+    <section class="album-section" id="album">
+
+        <div class="section-title">
+
+            <h2>
+                📸 Nuestro álbum
+            </h2>
+
+            <p>
+                Un lugar para guardar nuestros recuerdos.
+            </p>
+
+        </div>
+
+
+        <div class="album-upload-card">
+
+            <div class="album-upload-icon">
+                📷
+            </div>
+
+            <h3>
+                Añade un recuerdo
+            </h3>
+
+            <p>
+                Puedes enviarme una foto para nuestro álbum.
+                Primero tendrá que ser aprobada antes de aparecer.
+            </p>
+
+
+            <label
+                for="photoInput"
+                class="photo-file-label"
+            >
+                <span id="photoFileName">
+                    📁 Elegir una foto
+                </span>
+            </label>
+
+            <input
+                id="photoInput"
+                class="photo-file-input"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+            >
+
+
+            <input
+                id="photoCaption"
+                class="photo-caption-input"
+                type="text"
+                maxlength="200"
+                placeholder="Escribe algo sobre esta foto... (opcional)"
+            >
+
+
+            <button
+                id="uploadPhotoButton"
+                class="photo-upload-button"
+                type="button"
+            >
+                📸 Enviar foto ❤️
+            </button>
+
+
+            <p
+                id="photoUploadStatus"
+                class="photo-upload-status"
+            ></p>
+
+        </div>
+
+
+        <div
+            id="photoAlbum"
+            class="photo-album-grid"
+        ></div>
+
+
+        <div
+            id="photoAlbumEmpty"
+            class="photo-album-empty"
+        >
+            🌸 Todavía no hay recuerdos en nuestro álbum.
+        </div>
+
+    </section>
+
+
     <section class="future-section">
 
         <div class="section-title">
@@ -228,7 +322,9 @@
 </div>
 
 
-<!-- MODAL DE LA FLOR -->
+<!-- =====================================================
+     MODAL DE LA FLOR
+====================================================== -->
 
 <div
     id="messageModal"
@@ -283,6 +379,7 @@
             Cada día tiene una pequeña sorpresa para ti.
         </p>
 
+
         <!-- RESPUESTA DE ÖMRÜM -->
 
         <div class="reply-box">
@@ -319,6 +416,7 @@
             </div>
 
         </div>
+
 
         <div class="modal-signature">
             De tu Blubi para su Ömrüm ♥
