@@ -36,6 +36,8 @@
     >
 
     <link rel="stylesheet" href="./style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -44,7 +46,6 @@
 
 <div class="page">
 
-    <!-- HEADER -->
     <header>
         <div class="logo">
             <h1>Blubi ♥ Ömrüm</h1>
@@ -72,7 +73,6 @@
     </header>
 
 
-    <!-- HERO -->
     <section class="hero">
 
         <div class="hero-card">
@@ -144,7 +144,6 @@
     </section>
 
 
-    <!-- CALENDARIO -->
     <main class="calendar-section">
 
         <div class="section-title">
@@ -164,7 +163,6 @@
     </main>
 
 
-    <!-- FUTURO -->
     <section class="future-section">
 
         <div class="section-title">
@@ -221,7 +219,6 @@
     </section>
 
 
-    <!-- FOOTER -->
     <footer>
         <strong>Blubi ♥ Ömrüm</strong>
         <br>
@@ -231,7 +228,7 @@
 </div>
 
 
-<!-- MODAL -->
+<!-- MODAL DE LA FLOR -->
 
 <div
     id="messageModal"
@@ -286,6 +283,43 @@
             Cada día tiene una pequeña sorpresa para ti.
         </p>
 
+        <!-- RESPUESTA DE ÖMRÜM -->
+
+        <div class="reply-box">
+
+            <div class="reply-title">
+                💌 Respóndeme
+            </div>
+
+            <p class="reply-description">
+                Si quieres, déjame un pequeño mensaje sobre esta flor.
+            </p>
+
+            <textarea
+                id="replyMessage"
+                class="reply-input"
+                maxlength="1000"
+                placeholder="Escribe aquí tu respuesta..."
+            ></textarea>
+
+            <div class="reply-bottom">
+
+                <span id="replyCounter">
+                    0 / 1000
+                </span>
+
+                <button
+                    id="sendReply"
+                    class="reply-button"
+                    type="button"
+                >
+                    Enviar ❤️
+                </button>
+
+            </div>
+
+        </div>
+
         <div class="modal-signature">
             De tu Blubi para su Ömrüm ♥
         </div>
@@ -295,18 +329,15 @@
 </div>
 
 
-<!-- CORAZONES -->
 <div
     id="loveBurstContainer"
     class="love-burst-container"
 ></div>
 
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 
-<!-- VOLVER ARRIBA -->
 <button
     id="backTop"
     type="button"
@@ -320,15 +351,23 @@
 
 <script>
     if ("serviceWorker" in navigator) {
+
         window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./service-worker.js")
+
+            navigator.serviceWorker
+                .register("./service-worker.js")
                 .then(() => {
                     console.log("Service Worker activo.");
                 })
                 .catch(error => {
-                    console.error("Error Service Worker:", error);
+                    console.error(
+                        "Error Service Worker:",
+                        error
+                    );
                 });
+
         });
+
     }
 </script>
 
