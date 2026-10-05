@@ -31,6 +31,9 @@ const SPECIAL_LOVE_DATE =
 const SECOND_SPECIAL_LOVE_DATE =
     "2026-10-04";
 
+const THIRD_SPECIAL_LOVE_DATE =
+    "2026-10-06";
+
 const STORAGE_KEY =
     "blubi_omrum_new_calendar_2026_2027";
 
@@ -105,6 +108,41 @@ const specialMessages = {
 
         flower:
             "🌷",
+
+        special:
+            true
+
+    },
+
+
+    "2026-10-06": {
+
+        title:
+            "Para mi Ömrüm",
+
+        text:
+            "Ömrüm,\n\n" +
+            "si hay un momento de todo lo que hemos vivido que no quiero olvidar es ese en el que peor estuvimos los dos. " +
+            "Porque aunque fue una mierda y nos hizo daño a los dos, también me hizo darme cuenta de lo mucho que me importas.\n\n" +
+            "Hubo un momento en el que de verdad tuve miedo de perderte, y no te voy a mentir, lo pasé bastante mal. " +
+            "Pensaba demasiado las cosas, me imaginaba mil cosas y sentía que poco a poco te estaba perdiendo. " +
+            "Y seguramente yo tampoco hice todo bien, porque muchas veces mis miedos hacen que actúe de una forma que ni yo quiero.\n\n" +
+            "Pero incluso estando así, nunca dejé de quererte.\n\n" +
+            "Y creo que eso es lo que más quiero que entiendas de todo esto. " +
+            "Yo no te quiero solo cuando estamos bien, cuando nos reímos o cuando estamos juntos y siento que no existe nada más. " +
+            "También te quiero cuando estamos mal, cuando discutimos, cuando no nos entendemos y cuando las cosas se ponen difíciles.\n\n" +
+            "Porque si después de todo eso sigo aquí, sigo queriendo estar contigo y sigo imaginándome muchísimas cosas a tu lado, " +
+            "es porque de verdad eres importante para mí.\n\n" +
+            "No sé qué nos va a pasar en el futuro ni sé si todo va a ser fácil, " +
+            "pero sí sé que no quiero que un momento malo haga que olvidemos todo lo bueno que hemos vivido.\n\n" +
+            "Te quiero muchísimo, mi niña.\n\n" +
+            "Y aunque aquel momento fue seguramente de los peores que hemos pasado, " +
+            "también me gusta pensar que algún día lo recordaremos desde lejos y diremos que, a pesar de todo, seguimos eligiéndonos.\n\n" +
+            "Te quiero, Ömrüm ❤️\n\n" +
+            "Tu Blubi.",
+
+        flower:
+            "🌹",
 
         special:
             true
@@ -596,7 +634,8 @@ function renderCalendar() {
 
             const isSpecial =
                 key === SPECIAL_LOVE_DATE ||
-                key === SECOND_SPECIAL_LOVE_DATE;
+                key === SECOND_SPECIAL_LOVE_DATE ||
+                key === THIRD_SPECIAL_LOVE_DATE;
 
 
             if (isToday) {
@@ -660,6 +699,13 @@ function renderCalendar() {
 
                 mark.textContent =
                     "PARA TI";
+
+            } else if (
+                key === THIRD_SPECIAL_LOVE_DATE
+            ) {
+
+                mark.textContent =
+                    "PARA MI ÖMRÜM";
 
             } else if (isToday) {
 
@@ -773,7 +819,8 @@ function openFlower(date) {
     if (
         message.special ||
         key === SPECIAL_LOVE_DATE ||
-        key === SECOND_SPECIAL_LOVE_DATE
+        key === SECOND_SPECIAL_LOVE_DATE ||
+        key === THIRD_SPECIAL_LOVE_DATE
     ) {
 
         if (modal) {
@@ -1735,6 +1782,32 @@ function updateToday() {
                 <strong>❤️ Una pequeña nota para ti</strong>
                 <br>
                 <span>Hoy he dejado algo especial en nuestro jardín.</span>
+            `;
+
+            specialBanner.classList.add(
+                "active"
+            );
+
+        }
+
+    } else if (
+        key === THIRD_SPECIAL_LOVE_DATE
+    ) {
+
+        if (todayTitle) {
+
+            todayTitle.textContent =
+                "Para mi Ömrüm";
+
+        }
+
+
+        if (specialBanner) {
+
+            specialBanner.innerHTML = `
+                <strong>❤️ Algo que nunca quiero olvidar</strong>
+                <br>
+                <span>Hoy he dejado un recuerdo de uno de nuestros momentos más difíciles.</span>
             `;
 
             specialBanner.classList.add(
