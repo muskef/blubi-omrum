@@ -32,6 +32,9 @@ const SECOND_SPECIAL_LOVE_DATE =
     "2026-10-04";
 
 const THIRD_SPECIAL_LOVE_DATE =
+    "2026-10-06";
+
+const FOURTH_SPECIAL_LOVE_DATE =
     "2026-10-07";
 
 const STORAGE_KEY =
@@ -115,16 +118,60 @@ const specialMessages = {
     },
 
 
+    "2026-10-06": {
+
+        title:
+            "Para mi Ömrüm",
+
+        text:
+            "Ömrüm,\n\n" +
+            "si hay un momento de todo lo que hemos vivido que no quiero olvidar es ese en el que peor estuvimos los dos. " +
+            "Porque aunque fue una mierda y nos hizo daño a los dos, también me hizo darme cuenta de lo mucho que me importas.\n\n" +
+            "Hubo un momento en el que de verdad tuve miedo de perderte, y no te voy a mentir, lo pasé bastante mal. " +
+            "Pensaba demasiado las cosas, me imaginaba mil cosas y sentía que poco a poco te estaba perdiendo. " +
+            "Y seguramente yo tampoco hice todo bien, porque muchas veces mis miedos hacen que actúe de una forma que ni yo quiero.\n\n" +
+            "Pero incluso estando así, nunca dejé de quererte.\n\n" +
+            "Y creo que eso es lo que más quiero que entiendas de todo esto. " +
+            "Yo no te quiero solo cuando estamos bien, cuando nos reímos o cuando estamos juntos y siento que no existe nada más. " +
+            "También te quiero cuando estamos mal, cuando discutimos, cuando no nos entendemos y cuando las cosas se ponen difíciles.\n\n" +
+            "Porque si después de todo eso sigo aquí, sigo queriendo estar contigo y sigo imaginándome muchísimas cosas a tu lado, " +
+            "es porque de verdad eres importante para mí.\n\n" +
+            "No sé qué nos va a pasar en el futuro ni sé si todo va a ser fácil, " +
+            "pero sí sé que no quiero que un momento malo haga que olvidemos todo lo bueno que hemos vivido.\n\n" +
+            "Te quiero muchísimo, mi niña.\n\n" +
+            "Y aunque aquel momento fue seguramente de los peores que hemos pasado, " +
+            "también me gusta pensar que algún día lo recordaremos desde lejos y diremos que, a pesar de todo, seguimos eligiéndonos.\n\n" +
+            "Te quiero, Ömrüm ❤️\n\n" +
+            "Tu Blubi.",
+
+        flower:
+            "🌹",
+
+        special:
+            true
+
+    },
+
+
     "2026-10-07": {
 
         title:
             "Para mi Ömrüm",
 
         text:
-            "Ömrüm, creo que uno de los momentos más duros que hemos pasado fue cuando estuvimos así de mal y de verdad sentí que podía perderte. No te voy a mentir, lo pasé bastante mal, pensaba demasiado las cosas y me hacía mil películas en la cabeza, pero incluso en ese momento nunca dejé de quererte. Sé que yo también he hecho cosas mal y que muchas veces mis miedos hacen que actúe de una forma que ni yo quiero, pero todo eso viene de lo mucho que me importas. Y aunque ese momento nos hiciera daño, también me hizo darme cuenta de que no quiero rendirme contigo por una mala etapa. Yo te quiero cuando estamos bien, cuando estamos juntos y nos reímos, pero también cuando las cosas se ponen difíciles y no nos entendemos. No sé qué nos espera ni si todo va a ser fácil, pero sí sé que eres alguien que quiero en mi vida y que después de todo lo que hemos pasado sigo aquí porque te quiero de verdad. Ojalá algún día miremos atrás y pensemos que todo aquello solo fue una etapa más que conseguimos superar juntos. Te quiero muchísimo, mi niña ❤️",
+            "Ömrüm, no sé muy bien cómo decir estas cosas sin que suenen raras, " +
+            "pero supongo que por eso hice este jardín, para decirte cosas que a veces no me salen. " +
+            "La verdad es que, aunque a veces me raye muchísimo, piense demasiado las cosas o me monte películas yo solo, " +
+            "hay algo que nunca cambia, y es lo mucho que me importas. " +
+            "Hay días en los que estoy enfadado, días en los que estoy triste y días en los que siento que no entiendo nada, " +
+            "pero incluso esos días sigo queriendo hablar contigo, sigo queriendo verte y sigo sintiéndome más tranquilo cuando estoy a tu lado. " +
+            "No te quiero porque todo sea perfecto entre nosotros, porque los dos sabemos que no lo es, " +
+            "te quiero porque eres tú, porque eres la persona en la que pienso cuando me despierto, " +
+            "porque muchas de mis mejores memorias de este año tienen que ver contigo y porque, aunque a veces me cueste expresarlo bien, me haces feliz. " +
+            "Te quiero muchísimo, mi niña, y espero que cuando leas esto sepas que detrás de cada flor de este jardín siempre ha habido alguien que te quiere más de lo que sabe explicar. ❤️",
 
         flower:
-            "🌹",
+            "🌷",
 
         special:
             true
@@ -617,7 +664,8 @@ function renderCalendar() {
             const isSpecial =
                 key === SPECIAL_LOVE_DATE ||
                 key === SECOND_SPECIAL_LOVE_DATE ||
-                key === THIRD_SPECIAL_LOVE_DATE;
+                key === THIRD_SPECIAL_LOVE_DATE ||
+                key === FOURTH_SPECIAL_LOVE_DATE;
 
 
             if (isToday) {
@@ -684,6 +732,13 @@ function renderCalendar() {
 
             } else if (
                 key === THIRD_SPECIAL_LOVE_DATE
+            ) {
+
+                mark.textContent =
+                    "PARA MI ÖMRÜM";
+
+            } else if (
+                key === FOURTH_SPECIAL_LOVE_DATE
             ) {
 
                 mark.textContent =
@@ -802,7 +857,8 @@ function openFlower(date) {
         message.special ||
         key === SPECIAL_LOVE_DATE ||
         key === SECOND_SPECIAL_LOVE_DATE ||
-        key === THIRD_SPECIAL_LOVE_DATE
+        key === THIRD_SPECIAL_LOVE_DATE ||
+        key === FOURTH_SPECIAL_LOVE_DATE
     ) {
 
         if (modal) {
@@ -1379,10 +1435,6 @@ async function uploadPhoto() {
         );
 
 
-        /* -----------------------------------------------------
-           1. SUBIR FOTO A STORAGE
-        ----------------------------------------------------- */
-
         const {
             error: uploadError
         } =
@@ -1424,10 +1476,6 @@ async function uploadPhoto() {
         }
 
 
-        /* -----------------------------------------------------
-           2. GUARDAR REGISTRO EN LA TABLA
-        ----------------------------------------------------- */
-
         const {
             error: databaseError
         } =
@@ -1458,11 +1506,6 @@ async function uploadPhoto() {
             );
 
 
-            /* -------------------------------------------------
-               Si falla la BD, borramos la foto que acabamos
-               de subir para no dejar archivos huérfanos.
-            ------------------------------------------------- */
-
             await supabaseClient
                 .storage
                 .from(
@@ -1482,10 +1525,6 @@ async function uploadPhoto() {
 
         }
 
-
-        /* -----------------------------------------------------
-           3. LIMPIAR FORMULARIO
-        ----------------------------------------------------- */
 
         if (photoInput) {
 
@@ -1511,10 +1550,6 @@ async function uploadPhoto() {
         }
 
 
-        /* -----------------------------------------------------
-           4. MENSAJE DE ÉXITO
-        ----------------------------------------------------- */
-
         showPhotoUploadStatus(
             "❤️ Foto enviada. Ahora Blubi tiene que aprobarla antes de que aparezca en el álbum.",
             "success"
@@ -1533,12 +1568,6 @@ async function uploadPhoto() {
             error
         );
 
-
-        /*
-         * Si el mensaje todavía no ha sido mostrado por
-         * alguno de los errores anteriores, mostramos
-         * información útil.
-         */
 
         if (
             error &&
@@ -1790,6 +1819,32 @@ function updateToday() {
                 <strong>❤️ Algo que nunca quiero olvidar</strong>
                 <br>
                 <span>Hoy he dejado un recuerdo de uno de nuestros momentos más difíciles.</span>
+            `;
+
+            specialBanner.classList.add(
+                "active"
+            );
+
+        }
+
+    } else if (
+        key === FOURTH_SPECIAL_LOVE_DATE
+    ) {
+
+        if (todayTitle) {
+
+            todayTitle.textContent =
+                "Para mi Ömrüm";
+
+        }
+
+
+        if (specialBanner) {
+
+            specialBanner.innerHTML = `
+                <strong>❤️ Hoy también quería dejarte algo</strong>
+                <br>
+                <span>Una pequeña cosa que quería decirte hoy.</span>
             `;
 
             specialBanner.classList.add(
