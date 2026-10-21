@@ -37,6 +37,9 @@ const THIRD_SPECIAL_LOVE_DATE =
 const FOURTH_SPECIAL_LOVE_DATE =
     "2026-10-07";
 
+const FIFTH_SPECIAL_LOVE_DATE =
+    "2026-10-22";
+
 const STORAGE_KEY =
     "blubi_omrum_new_calendar_2026_2027";
 
@@ -172,6 +175,28 @@ const specialMessages = {
 
         flower:
             "🌷",
+
+        special:
+            true
+
+    },
+
+
+    "2026-10-22": {
+
+        title:
+            "No hay distancia que me haga olvidarte",
+
+        text:
+            "Ömrüm ❤️\n\n" +
+            "No sabes lo feliz que me hace todo lo que hemos hablado estos días, abrir nuestros corazones y sentir cuánto nos queremos. Me haces muy feliz y cada conversación contigo me hace valorar todavía más lo nuestro.\n\n" +
+            "Quiero que tengas algo claro, blubi: no hay años ni kilómetros suficientes para hacerme olvidarte. Pase lo que pase, estés cerca o lejos, lo que siento por ti no desaparece con el tiempo ni con la distancia.\n\n" +
+            "Quiero seguir conociéndote, cuidándote y aprendiendo a quererte cada día mejor. No quiero que tengas que demostrarme constantemente cuánto me quieres; quiero que sientas la tranquilidad de saber que eres muy importante para mí.\n\n" +
+            "Te elegiría hoy, dentro de muchos años y aunque nos separasen miles de kilómetros. Porque tú no eres alguien a quien quiera olvidar, sino alguien a quien quiero seguir llevando en mi corazón, pase lo que pase.\n\n" +
+            "Te quiero muchísimo, mi Ömrüm. Siempre tu blubi. ❤️🌷",
+
+        flower:
+            "🌹",
 
         special:
             true
@@ -665,7 +690,8 @@ function renderCalendar() {
                 key === SPECIAL_LOVE_DATE ||
                 key === SECOND_SPECIAL_LOVE_DATE ||
                 key === THIRD_SPECIAL_LOVE_DATE ||
-                key === FOURTH_SPECIAL_LOVE_DATE;
+                key === FOURTH_SPECIAL_LOVE_DATE ||
+                key === FIFTH_SPECIAL_LOVE_DATE;
 
 
             if (isToday) {
@@ -743,6 +769,13 @@ function renderCalendar() {
 
                 mark.textContent =
                     "PARA MI ÖMRÜM";
+
+            } else if (
+                key === FIFTH_SPECIAL_LOVE_DATE
+            ) {
+
+                mark.textContent =
+                    "NO HAY DISTANCIA";
 
             } else if (isToday) {
 
@@ -858,7 +891,8 @@ function openFlower(date) {
         key === SPECIAL_LOVE_DATE ||
         key === SECOND_SPECIAL_LOVE_DATE ||
         key === THIRD_SPECIAL_LOVE_DATE ||
-        key === FOURTH_SPECIAL_LOVE_DATE
+        key === FOURTH_SPECIAL_LOVE_DATE ||
+        key === FIFTH_SPECIAL_LOVE_DATE
     ) {
 
         if (modal) {
@@ -1845,6 +1879,32 @@ function updateToday() {
                 <strong>❤️ Hoy también quería dejarte algo</strong>
                 <br>
                 <span>Una pequeña cosa que quería decirte hoy.</span>
+            `;
+
+            specialBanner.classList.add(
+                "active"
+            );
+
+        }
+
+    } else if (
+        key === FIFTH_SPECIAL_LOVE_DATE
+    ) {
+
+        if (todayTitle) {
+
+            todayTitle.textContent =
+                "No hay distancia que me haga olvidarte";
+
+        }
+
+
+        if (specialBanner) {
+
+            specialBanner.innerHTML = `
+                <strong>❤️ No hay distancia que me haga olvidarte</strong>
+                <br>
+                <span>Hoy te he dejado una carta muy especial en nuestro jardín, Ömrüm.</span>
             `;
 
             specialBanner.classList.add(
