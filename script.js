@@ -66,7 +66,7 @@ const ALLOWED_PHOTO_TYPES = [
 
 
 /* =========================================================
-   MENSAJES ESPECIALES
+   MENSAJES ESPECIALES ANTERIORES AL 25/10/2026
 ========================================================= */
 
 const specialMessages = {
@@ -207,7 +207,7 @@ const specialMessages = {
 
 
 /* =========================================================
-   MENSAJES NORMALES
+   MENSAJES NORMALES ANTERIORES AL 25/10/2026
 ========================================================= */
 
 const normalMessages = [
@@ -470,14 +470,107 @@ function saveFlower(key) {
 
 
 /* =========================================================
-   MENSAJES
+   MENSAJES DIARIOS DESDE SUPABASE
+========================================================= */
+
+const DAILY_MESSAGES_CUTOFF = "2026-10-25";
+
+const dailyMessages = {};
+
+
+async function loadDailyMessages() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("daily_messages")
+        .select("date,title,message,flower")
+        .order("date", {
+            ascending: true
+        });
+
+
+    if (error) {
+
+        console.error(
+            "No se pudieron cargar los mensajes diarios:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    Object.keys(dailyMessages).forEach(
+        key => delete dailyMessages[key]
+    );
+
+
+    (data || []).forEach(row => {
+
+        dailyMessages[row.date] = {
+
+            title:
+                row.title || "",
+
+            text:
+                row.message || "",
+
+            flower:
+                row.flower || "🌷",
+
+            special:
+                false
+
+        };
+
+    });
+
+}
+
+
+/* =========================================================
+   OBTENER MENSAJE DE UN DÍA
 ========================================================= */
 
 function getMessage(key) {
 
+    /* Los mensajes editados desde el panel tienen prioridad. */
+    if (dailyMessages[key]) {
+
+        return dailyMessages[key];
+
+    }
+
+
+    /* Conserva los mensajes especiales anteriores al 25 de octubre. */
     if (specialMessages[key]) {
 
         return specialMessages[key];
+
+    }
+
+
+    /* Desde el 25/10 no se generan mensajes automáticos. */
+    if (key >= DAILY_MESSAGES_CUTOFF) {
+
+        return {
+
+            title:
+                "Sin mensaje todavía",
+
+            text:
+                "Este día todavía no tiene ningún mensaje.",
+
+            flower:
+                "🌱",
+
+            special:
+                false
+
+        };
 
     }
 
@@ -495,16 +588,13 @@ function getMessage(key) {
 
     const index =
         Math.floor(
-            (
-                current - start
-            ) /
+            (current - start) /
             (1000 * 60 * 60 * 24)
         );
 
 
     return normalMessages[
-        Math.abs(index) %
-        normalMessages.length
+        Math.abs(index) % normalMessages.length
     ];
 
 }
@@ -517,7 +607,9 @@ function getMessage(key) {
 function renderCalendar() {
 
     if (!calendar) {
+
         return;
+
     }
 
 
@@ -686,6 +778,7 @@ function renderCalendar() {
             const isPast =
                 date < today;
 
+
             const isSpecial =
                 key === SPECIAL_LOVE_DATE ||
                 key === SECOND_SPECIAL_LOVE_DATE ||
@@ -695,23 +788,33 @@ function renderCalendar() {
 
 
             if (isToday) {
+
                 cell.classList.add("today");
+
             }
 
             if (isFuture) {
+
                 cell.classList.add("future");
+
             }
 
             if (isPast) {
+
                 cell.classList.add("past");
+
             }
 
             if (isSpecial) {
+
                 cell.classList.add("special-love-day");
+
             }
 
             if (opened[key]) {
+
                 cell.classList.add("opened");
+
             }
 
 
@@ -850,27 +953,37 @@ function openFlower(date) {
 
 
     if (modalFlower) {
+
         modalFlower.textContent =
             message.flower;
+
     }
 
     if (modalDate) {
+
         modalDate.textContent =
             formatDate(date);
+
     }
 
     if (modalTitle) {
+
         modalTitle.textContent =
             message.title;
+
     }
 
     if (modalMessage) {
+
         modalMessage.textContent =
             message.text;
+
     }
 
     if (replyMessage) {
+
         replyMessage.value = "";
+
     }
 
 
@@ -936,7 +1049,9 @@ function openFlower(date) {
 function closeMessageModal() {
 
     if (!modal) {
+
         return;
+
     }
 
 
@@ -1000,7 +1115,9 @@ document.addEventListener(
 function updateReplyCounter() {
 
     if (!replyMessage || !replyCounter) {
+
         return;
+
     }
 
 
@@ -1063,16 +1180,20 @@ async function submitReply() {
             await supabaseClient
                 .from("responses")
                 .insert({
+
                     date:
                         currentlyOpenedDate,
 
                     message:
                         message
+
                 });
 
 
         if (error) {
+
             throw error;
+
         }
 
 
@@ -1169,7 +1290,9 @@ if (photoInput) {
 async function loadApprovedPhotos() {
 
     if (!photoAlbum) {
+
         return;
+
     }
 
 
@@ -1197,7 +1320,9 @@ async function loadApprovedPhotos() {
 
 
         if (error) {
+
             throw error;
+
         }
 
 
@@ -1676,7 +1801,9 @@ function showPhotoUploadStatus(
 ) {
 
     if (!photoUploadStatus) {
+
         return;
+
     }
 
 
@@ -1913,6 +2040,35 @@ function updateToday() {
 
         }
 
+    } else if (key >= DAILY_MESSAGES_CUTOFF) {
+
+        const dailyMessage =
+            getMessage(key);
+
+
+        if (todayTitle) {
+
+            todayTitle.textContent =
+                dailyMessages[key]
+                    ? dailyMessage.title
+                    : "Un nuevo comienzo";
+
+        }
+
+
+        if (specialBanner) {
+
+            specialBanner.textContent =
+                dailyMessages[key]
+                    ? "Hay un mensaje guardado para hoy."
+                    : "Este día todavía no tiene ningún mensaje.";
+
+            specialBanner.classList.remove(
+                "active"
+            );
+
+        }
+
     } else {
 
         if (todayTitle) {
@@ -1946,7 +2102,9 @@ function updateToday() {
 function createLoveBurst() {
 
     if (!loveBurstContainer) {
+
         return;
+
     }
 
 
@@ -2048,7 +2206,9 @@ function playSpecialSound() {
 
 
         if (!AudioContext) {
+
             return;
+
         }
 
 
@@ -2120,7 +2280,9 @@ function playSpecialSound() {
 function showToast(message) {
 
     if (!toast) {
+
         return;
+
     }
 
 
@@ -2202,7 +2364,9 @@ window.addEventListener(
     () => {
 
         if (!backTop) {
+
             return;
+
         }
 
 
@@ -2391,8 +2555,13 @@ if (backgroundCanvas) {
    INICIO
 ========================================================= */
 
-updateToday();
+loadDailyMessages().finally(() => {
 
-renderCalendar();
+    updateToday();
+
+    renderCalendar();
+
+});
+
 
 loadApprovedPhotos();
