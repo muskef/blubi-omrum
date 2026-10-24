@@ -1,1261 +1,578 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Panel privado — Blubi ❤️ Ömrüm</title>
-
-    <meta
-        name="theme-color"
-        content="#120b14"
-    >
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
-        rel="stylesheet"
-    >
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-    <style>
-
-        :root {
-
-            --bg: #120b14;
-            --card: #211322;
-
-            --pink: #f29abb;
-            --pink-light: #ffd5e5;
-
-            --gold: #f4d58d;
-
-            --text: #f9eaf0;
-            --muted: #bba8b1;
-
-            --border:
-                rgba(255,205,225,0.14);
-
-        }
-
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-
-            margin: 0;
-
-            min-height: 100vh;
-
-            background:
-                radial-gradient(
-                    circle at top,
-                    rgba(201,99,141,0.16),
-                    transparent 40%
-                ),
-                var(--bg);
-
-            color: var(--text);
-
-            font-family:
-                "DM Sans",
-                sans-serif;
-
-        }
-
-
-        .container {
-
-            width:
-                min(1000px, calc(100% - 30px));
-
-            margin:
-                0 auto;
-
-            padding:
-                35px 0 70px;
-
-        }
-
-
-        header {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            gap: 15px;
-
-            margin-bottom: 35px;
-
-        }
-
-
-        h1 {
-
-            margin: 0;
-
-            font-family:
-                "Playfair Display",
-                serif;
-
-            color:
-                var(--pink-light);
-
-        }
-
-
-        .subtitle {
-
-            margin-top: 5px;
-
-            color:
-                var(--muted);
-
-        }
-
-
-        button {
-
-            font-family:
-                inherit;
-
-            cursor: pointer;
-
-        }
-
-
-        .logout {
-
-            padding:
-                10px 15px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 12px;
-
-            background:
-                rgba(255,255,255,0.04);
-
-            color:
-                var(--pink-light);
-
-        }
-
-
-        .login-card {
-
-            width:
-                min(430px, calc(100% - 30px));
-
-            margin:
-                100px auto;
-
-            padding:
-                35px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius:
-                25px;
-
-            background:
-                rgba(33,19,34,0.9);
-
-            box-shadow:
-                0 25px 80px rgba(0,0,0,0.4);
-
-        }
-
-
-        .login-card h1 {
-
-            margin-bottom:
-                10px;
-
-        }
-
-
-        label {
-
-            display: block;
-
-            margin:
-                18px 0 7px;
-
-            color:
-                var(--muted);
-
-            font-size:
-                13px;
-
-        }
-
-
-        input {
-
-            width: 100%;
-
-            padding:
-                13px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius:
-                12px;
-
-            outline: none;
-
-            background:
-                rgba(0,0,0,0.2);
-
-            color:
-                var(--text);
-
-        }
-
-
-        input:focus {
-
-            border-color:
-                var(--pink);
-
-        }
-
-
-        .login-button {
-
-            width: 100%;
-
-            margin-top: 22px;
-
-            padding:
-                13px;
-
-            border: none;
-
-            border-radius:
-                12px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #c9638d,
-                    #f29abb
-                );
-
-            color:
-                #210d17;
-
-            font-weight:
-                700;
-
-        }
-
-
-        .error {
-
-            margin-top:
-                14px;
-
-            color:
-                #ff9fae;
-
-            font-size:
-                13px;
-
-        }
-
-
-        .stats {
-
-            display:
-                grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap:
-                15px;
-
-            margin-bottom:
-                35px;
-
-        }
-
-
-        .stat {
-
-            padding:
-                20px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius:
-                18px;
-
-            background:
-                rgba(255,255,255,0.03);
-
-        }
-
-
-        .stat-number {
-
-            display: block;
-
-            font-size:
-                28px;
-
-            font-weight:
-                700;
-
-            color:
-                var(--pink);
-
-        }
-
-
-        .stat-label {
-
-            color:
-                var(--muted);
-
-            font-size:
-                13px;
-
-        }
-
-
-        .admin-section {
-
-            margin-top:
-                45px;
-
-        }
-
-
-        .section-heading {
-
-            margin-bottom:
-                20px;
-
-        }
-
-
-        .section-heading h2 {
-
-            margin:
-                0;
-
-            font-family:
-                "Playfair Display",
-                serif;
-
-            color:
-                var(--pink-light);
-
-            font-size:
-                30px;
-
-        }
-
-
-        .section-heading p {
-
-            margin:
-                6px 0 0;
-
-            color:
-                var(--muted);
-
-        }
-
-
-        .responses {
-
-            display:
-                grid;
-
-            gap:
-                16px;
-
-        }
-
-
-        .response {
-
-            padding:
-                22px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius:
-                20px;
-
-            background:
-                rgba(255,255,255,0.035);
-
-        }
-
-
-        .response.unread {
-
-            border-color:
-                rgba(242,154,187,0.6);
-
-            box-shadow:
-                0 0 25px
-                rgba(242,154,187,0.08);
-
-        }
-
-
-        .response-top {
-
-            display:
-                flex;
-
-            justify-content:
-                space-between;
-
-            gap:
-                15px;
-
-            margin-bottom:
-                14px;
-
-        }
-
-
-        .response-date {
-
-            color:
-                var(--pink-light);
-
-            font-weight:
-                700;
-
-        }
-
-
-        .new {
-
-            display:
-                inline-block;
-
-            margin-left:
-                8px;
-
-            padding:
-                4px 8px;
-
-            border-radius:
-                20px;
-
-            background:
-                rgba(242,154,187,0.15);
-
-            color:
-                var(--pink);
-
-            font-size:
-                10px;
-
-            font-weight:
-                700;
-
-        }
-
-
-        .response-time {
-
-            color:
-                var(--muted);
-
-            font-size:
-                12px;
-
-        }
-
-
-        .response-message {
-
-            margin:
-                0 0 18px;
-
-            white-space:
-                pre-line;
-
-            line-height:
-                1.7;
-
-        }
-
-
-        .mark-read {
-
-            padding:
-                9px 13px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius:
-                10px;
-
-            background:
-                rgba(255,255,255,0.04);
-
-            color:
-                var(--pink-light);
-
-        }
-
-
-        .empty {
-
-            padding:
-                50px;
-
-            text-align:
-                center;
-
-            color:
-                var(--muted);
-
-            border:
-                1px dashed var(--border);
-
-            border-radius:
-                20px;
-
-        }
-
-
-        .loading {
-
-            color:
-                var(--muted);
-
-        }
-
-
-        /* =====================================================
-           FOTOS PENDIENTES
-        ====================================================== */
-
-        .pending-photos {
-
-            display:
-                grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap:
-                20px;
-
-        }
-
-
-        .pending-photo {
-
-            overflow:
-                hidden;
-
-            border:
-                1px solid var(--border);
-
-            border-radius:
-                20px;
-
-            background:
-                rgba(255,255,255,0.035);
-
-        }
-
-
-        .pending-photo-image-wrapper {
-
-            width:
-                100%;
-
-            aspect-ratio:
-                1 / 1;
-
-            overflow:
-                hidden;
-
-            background:
-                rgba(0,0,0,0.25);
-
-        }
-
-
-        .pending-photo-image {
-
-            width:
-                100%;
-
-            height:
-                100%;
-
-            display:
-                block;
-
-            object-fit:
-                cover;
-
-        }
-
-
-        .pending-photo-content {
-
-            padding:
-                18px;
-
-        }
-
-
-        .pending-photo-name {
-
-            color:
-                var(--pink-light);
-
-            font-weight:
-                700;
-
-            word-break:
-                break-word;
-
-        }
-
-
-        .pending-photo-caption {
-
-            margin:
-                8px 0;
-
-            color:
-                var(--text);
-
-            line-height:
-                1.5;
-
-        }
-
-
-        .pending-photo-date {
-
-            color:
-                var(--muted);
-
-            font-size:
-                12px;
-
-        }
-
-
-        .photo-actions {
-
-            display:
-                grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap:
-                10px;
-
-            margin-top:
-                16px;
-
-        }
-
-
-        .approve-button,
-        .reject-button {
-
-            padding:
-                11px;
-
-            border:
-                none;
-
-            border-radius:
-                11px;
-
-            font-weight:
-                700;
-
-        }
-
-
-        .approve-button {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #78c99a,
-                    #b4edc8
-                );
-
-            color:
-                #102016;
-
-        }
-
-
-        .reject-button {
-
-            background:
-                rgba(255,120,140,0.12);
-
-            border:
-                1px solid rgba(255,120,140,0.25);
-
-            color:
-                #ffb0bb;
-
-        }
-
-
-        .approve-button:disabled,
-        .reject-button:disabled {
-
-            opacity:
-                0.5;
-
-            cursor:
-                wait;
-
-        }
-
-
-        @media (max-width: 650px) {
-
-            header {
-
-                align-items:
-                    flex-start;
-
-                flex-direction:
-                    column;
-
-            }
-
-
-            .stats {
-
-                grid-template-columns:
-                    1fr;
-
-            }
-
-
-            .response-top {
-
-                flex-direction:
-                    column;
-
-            }
-
-
-            .pending-photos {
-
-                grid-template-columns:
-                    1fr;
-
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#120b14">
+<title>Panel privado — Blubi ❤️ Ömrüm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+    --bg:#120b14;
+    --card:#211322;
+    --pink:#f29abb;
+    --pink-light:#ffd5e5;
+    --gold:#f4d58d;
+    --text:#f9eaf0;
+    --muted:#bba8b1;
+    --border:rgba(255,205,225,.14);
+}
+* { box-sizing:border-box; }
+body {
+    margin:0;
+    min-height:100vh;
+    background:radial-gradient(circle at top,rgba(201,99,141,.16),transparent 40%),var(--bg);
+    color:var(--text);
+    font-family:"DM Sans",sans-serif;
+}
+.container { width:min(1000px,calc(100% - 30px)); margin:0 auto; padding:35px 0 70px; }
+header { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:35px; }
+h1,h2 { font-family:"Playfair Display",serif; color:var(--pink-light); }
+h1 { margin:0; }
+.subtitle { margin-top:5px; color:var(--muted); }
+button { font-family:inherit; cursor:pointer; }
+button:disabled { opacity:.55; cursor:wait; }
+.logout,.mark-read,.editor-button {
+    padding:10px 15px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:rgba(255,255,255,.04);
+    color:var(--pink-light);
+}
+.login-card {
+    width:min(430px,calc(100% - 30px));
+    margin:80px auto;
+    padding:30px;
+    border:1px solid var(--border);
+    border-radius:25px;
+    background:rgba(33,19,34,.9);
+    box-shadow:0 25px 80px rgba(0,0,0,.4);
+}
+label { display:block; margin:18px 0 7px; color:var(--muted); font-size:13px; }
+input,textarea {
+    width:100%;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    outline:none;
+    background:rgba(0,0,0,.2);
+    color:var(--text);
+    font:inherit;
+}
+input:focus,textarea:focus { border-color:var(--pink); }
+textarea { min-height:190px; resize:vertical; line-height:1.65; }
+.login-button,.primary {
+    background:linear-gradient(135deg,#c9638d,#f29abb);
+    color:#210d17;
+    font-weight:700;
+    border:0;
+}
+.login-button { width:100%; margin-top:22px; padding:13px; border-radius:12px; }
+.error { margin-top:14px; color:#ff9fae; font-size:13px; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin-bottom:35px; }
+.stat { padding:20px; border:1px solid var(--border); border-radius:18px; background:rgba(255,255,255,.03); }
+.stat-number { display:block; font-size:28px; font-weight:700; color:var(--pink); }
+.stat-label { color:var(--muted); font-size:13px; }
+.admin-section { margin-top:45px; }
+.section-heading { margin-bottom:20px; }
+.section-heading h2 { margin:0; font-size:30px; }
+.section-heading p { margin:6px 0 0; color:var(--muted); line-height:1.6; }
+.message-editor,.response,.pending-photo {
+    padding:22px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    background:rgba(255,255,255,.035);
+}
+.message-editor-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 18px; }
+.full-width { grid-column:1/-1; }
+.editor-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+.editor-button { padding:11px 14px; }
+.editor-button.primary { border:0; }
+.danger { background:rgba(255,100,120,.10); border-color:rgba(255,120,140,.3); color:#ffb0bb; }
+.editor-status { min-height:20px; margin-top:15px; color:var(--muted); line-height:1.5; overflow-wrap:anywhere; }
+.editor-status.success { color:#a5e6b4; }
+.editor-status.error { color:#ff9fae; }
+.responses { display:grid; gap:16px; }
+.response.unread { border-color:rgba(242,154,187,.6); box-shadow:0 0 25px rgba(242,154,187,.08); }
+.response-top { display:flex; justify-content:space-between; gap:15px; margin-bottom:14px; }
+.response-date { color:var(--pink-light); font-weight:700; }
+.new { display:inline-block; margin-left:8px; padding:4px 8px; border-radius:20px; background:rgba(242,154,187,.15); color:var(--pink); font-size:10px; font-weight:700; }
+.response-time,.pending-photo-date { color:var(--muted); font-size:12px; }
+.response-message { margin:0 0 18px; white-space:pre-line; line-height:1.7; overflow-wrap:anywhere; }
+.empty { padding:35px 20px; text-align:center; color:var(--muted); border:1px dashed var(--border); border-radius:20px; line-height:1.6; }
+.loading { color:var(--muted); padding:15px 0; }
+.pending-photos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.pending-photo { overflow:hidden; padding:0; }
+.pending-photo-image-wrapper { width:100%; aspect-ratio:1/1; overflow:hidden; background:rgba(0,0,0,.25); }
+.pending-photo-image { width:100%; height:100%; display:block; object-fit:cover; }
+.pending-photo-content { padding:18px; }
+.pending-photo-name { color:var(--pink-light); font-weight:700; overflow-wrap:anywhere; }
+.pending-photo-caption { margin:8px 0; line-height:1.5; overflow-wrap:anywhere; }
+.photo-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px; }
+.approve-button,.reject-button { padding:11px 8px; border-radius:10px; font-weight:700; }
+.approve-button { border:0; background:rgba(100,220,140,.12); color:#a5e6b4; }
+.reject-button { border:1px solid rgba(255,120,140,.25); background:rgba(255,120,140,.10); color:#ffb0bb; }
+@media(max-width:650px) {
+    header { align-items:flex-start; flex-direction:column; }
+    .stats { grid-template-columns:1fr; }
+    .message-editor-grid,.pending-photos { grid-template-columns:1fr; }
+    .full-width { grid-column:auto; }
+    .response-top { flex-direction:column; }
+    .editor-actions { flex-direction:column; }
+    .editor-button { width:100%; }
+    .login-card { padding:23px; }
+    .section-heading h2 { font-size:25px; }
+}
+</style>
 </head>
-
 
 <body>
 
-
-<div
-    id="loginView"
-    class="login-card"
->
-
-    <h1>
-        🔐 Panel privado
-    </h1>
-
-    <p class="subtitle">
-        Respuestas de Ömrüm
-    </p>
-
+<div id="loginView" class="login-card">
+    <h1>🔐 Panel privado</h1>
+    <p class="subtitle">Administración del jardín</p>
 
     <form id="loginForm">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" required>
 
-        <label for="email">
-            Email
-        </label>
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" autocomplete="current-password" required>
 
-        <input
-            id="email"
-            type="email"
-            autocomplete="email"
-            required
-        >
-
-
-        <label for="password">
-            Contraseña
-        </label>
-
-        <input
-            id="password"
-            type="password"
-            autocomplete="current-password"
-            required
-        >
-
-
-        <button
-            class="login-button"
-            type="submit"
-        >
-            Entrar ❤️
-        </button>
-
+        <button class="login-button" type="submit">Entrar ❤️</button>
+        <div id="loginError" class="error" role="alert"></div>
     </form>
-
-
-    <div
-        id="loginError"
-        class="error"
-    ></div>
-
 </div>
 
-
-<div
-    id="adminView"
-    class="container"
-    style="display:none;"
->
+<div id="adminView" class="container" style="display:none">
 
     <header>
-
         <div>
-
-            <h1>
-                💌 Panel de Ömrüm
-            </h1>
-
-            <div class="subtitle">
-                Respuestas y recuerdos enviados a vuestro jardín.
-            </div>
-
+            <h1>🌷 Panel de administración</h1>
+            <p class="subtitle">Gestiona los mensajes, las respuestas y las fotos.</p>
         </div>
-
-
-        <button
-            id="logoutButton"
-            class="logout"
-            type="button"
-        >
-            Cerrar sesión
-        </button>
-
+        <button id="logoutButton" class="logout" type="button">Cerrar sesión</button>
     </header>
 
-
-    <!-- ESTADÍSTICAS -->
-
     <section class="stats">
-
         <div class="stat">
-
-            <span
-                id="totalCount"
-                class="stat-number"
-            >
-                0
-            </span>
-
-            <span class="stat-label">
-                Respuestas
-            </span>
-
+            <span id="totalCount" class="stat-number">0</span>
+            <span class="stat-label">Respuestas</span>
         </div>
-
-
         <div class="stat">
-
-            <span
-                id="unreadCount"
-                class="stat-number"
-            >
-                0
-            </span>
-
-            <span class="stat-label">
-                Sin leer
-            </span>
-
+            <span id="unreadCount" class="stat-number">0</span>
+            <span class="stat-label">Sin leer</span>
         </div>
-
-
         <div class="stat">
-
-            <span
-                id="pendingCount"
-                class="stat-number"
-            >
-                0
-            </span>
-
-            <span class="stat-label">
-                Fotos pendientes
-            </span>
-
+            <span id="pendingCount" class="stat-number">0</span>
+            <span class="stat-label">Fotos pendientes</span>
         </div>
-
     </section>
 
-
-    <!-- RESPUESTAS -->
-
     <section class="admin-section">
-
         <div class="section-heading">
-
-            <h2>
-                💌 Respuestas
-            </h2>
-
-            <p>
-                Todos los mensajes que ha dejado en vuestro jardín.
-            </p>
-
+            <h2>🌷 Mensajes por día</h2>
+            <p>Elige una fecha, escribe un título y un mensaje, y guárdalo. El calendario mostrará el contenido guardado para ese día.</p>
         </div>
 
+        <div class="message-editor">
+            <div class="message-editor-grid">
+                <div>
+                    <label for="dailyMessageDate">Fecha</label>
+                    <input id="dailyMessageDate" type="date" min="2026-09-28" max="2027-09-28" value="2026-10-25" required>
+                </div>
 
-        <section
-            id="responses"
-            class="responses"
-        >
+                <div>
+                    <label for="dailyMessageFlower">Flor / emoji</label>
+                    <input id="dailyMessageFlower" type="text" maxlength="12" value="🌷" placeholder="🌷">
+                </div>
 
-            <div class="loading">
-                Cargando respuestas...
+                <div class="full-width">
+                    <label for="dailyMessageTitle">Título</label>
+                    <input id="dailyMessageTitle" type="text" maxlength="150" placeholder="Título del mensaje">
+                </div>
+
+                <div class="full-width">
+                    <label for="dailyMessageText">Mensaje</label>
+                    <textarea id="dailyMessageText" maxlength="12000" placeholder="Escribe aquí el mensaje para este día..."></textarea>
+                </div>
             </div>
 
-        </section>
+            <div class="editor-actions">
+                <button id="loadDailyMessageButton" class="editor-button" type="button">Cargar fecha</button>
+                <button id="saveDailyMessageButton" class="editor-button primary" type="button">Guardar mensaje</button>
+                <button id="deleteDailyMessageButton" class="editor-button danger" type="button">Eliminar mensaje de esta fecha</button>
+                <button id="deleteFutureMessagesButton" class="editor-button danger" type="button">Eliminar mensajes desde el 25/10/2026</button>
+            </div>
 
+            <div id="dailyMessageStatus" class="editor-status" role="status" aria-live="polite"></div>
+        </div>
     </section>
 
-
-    <!-- FOTOS PENDIENTES -->
-
     <section class="admin-section">
-
         <div class="section-heading">
-
-            <h2>
-                📸 Fotos pendientes
-            </h2>
-
-            <p>
-                Revisa los recuerdos antes de que aparezcan en el álbum.
-            </p>
-
+            <h2>💌 Respuestas</h2>
+            <p>Mensajes que se han enviado desde el calendario.</p>
         </div>
 
-
-        <section
-            id="pendingPhotos"
-            class="pending-photos"
-        >
-
-            <div class="loading">
-                Cargando fotos...
-            </div>
-
+        <section id="responses" class="responses">
+            <div class="loading">Cargando respuestas...</div>
         </section>
+    </section>
 
+    <section class="admin-section">
+        <div class="section-heading">
+            <h2>📸 Fotos pendientes</h2>
+            <p>Aprueba las fotos para que aparezcan en el álbum o recházalas.</p>
+        </div>
+
+        <section id="pendingPhotos" class="pending-photos">
+            <div class="loading">Cargando fotos...</div>
+        </section>
     </section>
 
 </div>
 
-
 <script>
+"use strict";
 
-const SUPABASE_URL =
-    "https://jqehzruekmlfagyvytsn.supabase.co";
+/* =========================================================
+   CONFIGURACIÓN SUPABASE
+========================================================= */
 
-const SUPABASE_ANON_KEY =
-    "sb_publishable_Q-FkjZiyjIbriXcDUliaVQ__MnqNIhV";
+const SUPABASE_URL = "https://jqehzruekmlfagyvytsn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Q-FkjZiyjIbriXcDUliaVQ__MnqNIhV";
 
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
+const PENDING_PHOTOS_BUCKET = "pending-photos";
+const APPROVED_PHOTOS_BUCKET = "approved-photos";
+const DAILY_MESSAGES_CUTOFF = "2026-10-25";
 
+const $ = id => document.getElementById(id);
 
-const PENDING_PHOTOS_BUCKET =
-    "pending-photos";
+const loginView = $("loginView");
+const adminView = $("adminView");
+const loginForm = $("loginForm");
+const loginError = $("loginError");
+const logoutButton = $("logoutButton");
 
-const APPROVED_PHOTOS_BUCKET =
-    "approved-photos";
+const responsesContainer = $("responses");
+const totalCount = $("totalCount");
+const unreadCount = $("unreadCount");
+const pendingCount = $("pendingCount");
+const pendingPhotosContainer = $("pendingPhotos");
 
-
-const loginView =
-    document.getElementById("loginView");
-
-const adminView =
-    document.getElementById("adminView");
-
-const loginForm =
-    document.getElementById("loginForm");
-
-const loginError =
-    document.getElementById("loginError");
-
-const logoutButton =
-    document.getElementById("logoutButton");
-
-const responsesContainer =
-    document.getElementById("responses");
-
-const totalCount =
-    document.getElementById("totalCount");
-
-const unreadCount =
-    document.getElementById("unreadCount");
-
-const pendingCount =
-    document.getElementById("pendingCount");
-
-const pendingPhotosContainer =
-    document.getElementById("pendingPhotos");
+const dailyMessageDate = $("dailyMessageDate");
+const dailyMessageFlower = $("dailyMessageFlower");
+const dailyMessageTitle = $("dailyMessageTitle");
+const dailyMessageText = $("dailyMessageText");
+const dailyMessageStatus = $("dailyMessageStatus");
+const loadDailyMessageButton = $("loadDailyMessageButton");
+const saveDailyMessageButton = $("saveDailyMessageButton");
+const deleteDailyMessageButton = $("deleteDailyMessageButton");
+const deleteFutureMessagesButton = $("deleteFutureMessagesButton");
 
 
 /* =========================================================
-   FECHAS
+   UTILIDADES
 ========================================================= */
 
 function formatDate(dateString) {
-
-    const date =
-        new Date(
-            `${dateString}T12:00:00`
-        );
-
-
-    return date.toLocaleDateString(
-        "es-ES",
-        {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }
-    );
-
+    const date = new Date(`${dateString}T12:00:00`);
+    return date.toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
 }
 
-
 function formatTime(dateString) {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
 
-    const date =
-        new Date(dateString);
+function showLogin() {
+    loginView.style.display = "block";
+    adminView.style.display = "none";
+}
 
+function showAdmin() {
+    loginView.style.display = "none";
+    adminView.style.display = "block";
+}
 
-    return date.toLocaleString(
-        "es-ES",
-        {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-        }
-    );
+function setDailyMessageStatus(message, type = "") {
+    dailyMessageStatus.textContent = message;
+    dailyMessageStatus.className = "editor-status";
+    if (type) dailyMessageStatus.classList.add(type);
+}
 
+function setButtonBusy(button, busy, busyText, normalText) {
+    button.disabled = busy;
+    button.textContent = busy ? busyText : normalText;
 }
 
 
 /* =========================================================
-   LOGIN
+   SESIÓN Y LOGIN
 ========================================================= */
 
-function showLogin() {
-
-    loginView.style.display =
-        "block";
-
-    adminView.style.display =
-        "none";
-
-}
-
-
-function showAdmin() {
-
-    loginView.style.display =
-        "none";
-
-    adminView.style.display =
-        "block";
-
-}
-
-
 async function checkSession() {
+    const { data, error } = await supabaseClient.auth.getSession();
 
-    const {
-        data
-    } =
-        await supabaseClient
-            .auth
-            .getSession();
-
+    if (error) {
+        console.error("Error comprobando sesión:", error);
+        showLogin();
+        return;
+    }
 
     if (data.session) {
-
         showAdmin();
-
-        await Promise.all([
-            loadResponses(),
-            loadPendingPhotos()
-        ]);
-
+        await loadAllAdminData();
     } else {
-
         showLogin();
-
     }
-
 }
 
+async function loadAllAdminData() {
+    await Promise.allSettled([
+        loadResponses(),
+        loadPendingPhotos(),
+        loadDailyMessageForDate()
+    ]);
+}
 
-loginForm.addEventListener(
-    "submit",
-    async event => {
+loginForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    loginError.textContent = "";
 
-        event.preventDefault();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const button = loginForm.querySelector("button");
 
+    setButtonBusy(button, true, "Entrando...", "Entrar ❤️");
 
-        loginError.textContent =
-            "";
+    try {
+        const { error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
 
-
-        const email =
-            document.getElementById(
-                "email"
-            ).value.trim();
-
-
-        const password =
-            document.getElementById(
-                "password"
-            ).value;
-
-
-        const button =
-            loginForm.querySelector(
-                "button"
-            );
-
-
-        button.disabled =
-            true;
-
-        button.textContent =
-            "Entrando...";
-
-
-        const {
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
-
-                    email,
-                    password
-
-                });
-
-
-        button.disabled =
-            false;
-
-        button.textContent =
-            "Entrar ❤️";
-
-
-        if (error) {
-
-            console.error(error);
-
-            loginError.textContent =
-                "Email o contraseña incorrectos.";
-
-            return;
-
-        }
-
+        if (error) throw error;
 
         showAdmin();
-
-
-        await Promise.all([
-            loadResponses(),
-            loadPendingPhotos()
-        ]);
-
+        await loadAllAdminData();
+    } catch (error) {
+        console.error("Error iniciando sesión:", error);
+        loginError.textContent = "No se pudo iniciar sesión. Comprueba el email y la contraseña.";
+    } finally {
+        setButtonBusy(button, false, "Entrando...", "Entrar ❤️");
     }
-);
+});
 
+logoutButton.addEventListener("click", async () => {
+    logoutButton.disabled = true;
 
-logoutButton.addEventListener(
-    "click",
-    async () => {
+    const { error } = await supabaseClient.auth.signOut();
 
-        await supabaseClient
-            .auth
-            .signOut();
+    logoutButton.disabled = false;
 
+    if (error) {
+        console.error("Error cerrando sesión:", error);
+        alert("No se pudo cerrar la sesión.");
+        return;
+    }
+
+    showLogin();
+});
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (session) {
+        showAdmin();
+    } else {
         showLogin();
-
     }
-);
+});
+
+
+/* =========================================================
+   MENSAJES DIARIOS
+========================================================= */
+
+async function loadDailyMessageForDate() {
+    const date = dailyMessageDate.value;
+
+    if (!date) {
+        setDailyMessageStatus("Selecciona una fecha.", "error");
+        return;
+    }
+
+    setDailyMessageStatus("Cargando mensaje...");
+
+    const { data, error } = await supabaseClient
+        .from("daily_messages")
+        .select("date,title,message,flower")
+        .eq("date", date)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Error cargando mensaje diario:", error);
+        setDailyMessageStatus(
+            "No se pudo cargar. Comprueba que existe daily_messages y que tu sesión tiene permisos.",
+            "error"
+        );
+        return;
+    }
+
+    dailyMessageTitle.value = data?.title || "";
+    dailyMessageText.value = data?.message || "";
+    dailyMessageFlower.value = data?.flower || "🌷";
+
+    setDailyMessageStatus(
+        data
+            ? `Mensaje cargado para ${formatDate(date)}.`
+            : `No hay mensaje guardado para ${formatDate(date)}. Puedes escribir uno nuevo.`
+    );
+}
+
+async function saveDailyMessage() {
+    const date = dailyMessageDate.value;
+    const title = dailyMessageTitle.value.trim();
+    const message = dailyMessageText.value.trim();
+    const flower = dailyMessageFlower.value.trim() || "🌷";
+
+    if (!date || !title || !message) {
+        setDailyMessageStatus("Selecciona una fecha y escribe un título y un mensaje.", "error");
+        return;
+    }
+
+    if (date < "2026-09-28" || date > "2027-09-28") {
+        setDailyMessageStatus("La fecha debe estar dentro del calendario.", "error");
+        return;
+    }
+
+    setButtonBusy(saveDailyMessageButton, true, "Guardando...", "Guardar mensaje");
+    setDailyMessageStatus("Guardando mensaje...");
+
+    try {
+        const { error } = await supabaseClient
+            .from("daily_messages")
+            .upsert({
+                date,
+                title,
+                message,
+                flower,
+                updated_at: new Date().toISOString()
+            }, {
+                onConflict: "date"
+            });
+
+        if (error) throw error;
+
+        setDailyMessageStatus(
+            `Mensaje guardado para ${formatDate(date)}. Para comprobarlo en la página del calendario, recárgala.`,
+            "success"
+        );
+    } catch (error) {
+        console.error("Error guardando mensaje diario:", error);
+        setDailyMessageStatus(`No se pudo guardar: ${error.message || "error desconocido"}`, "error");
+    } finally {
+        setButtonBusy(saveDailyMessageButton, false, "Guardando...", "Guardar mensaje");
+    }
+}
+
+async function deleteDailyMessage() {
+    const date = dailyMessageDate.value;
+    if (!date) return;
+
+    if (!confirm(`¿Eliminar únicamente el mensaje del ${formatDate(date)}?`)) return;
+
+    setButtonBusy(deleteDailyMessageButton, true, "Eliminando...", "Eliminar mensaje de esta fecha");
+
+    try {
+        const { error } = await supabaseClient
+            .from("daily_messages")
+            .delete()
+            .eq("date", date);
+
+        if (error) throw error;
+
+        dailyMessageTitle.value = "";
+        dailyMessageText.value = "";
+        dailyMessageFlower.value = "🌷";
+
+        setDailyMessageStatus(`Mensaje del ${formatDate(date)} eliminado.`, "success");
+    } catch (error) {
+        console.error("Error eliminando mensaje:", error);
+        setDailyMessageStatus(`No se pudo eliminar: ${error.message || "error desconocido"}`, "error");
+    } finally {
+        setButtonBusy(deleteDailyMessageButton, false, "Eliminando...", "Eliminar mensaje de esta fecha");
+    }
+}
+
+async function deleteFutureDailyMessages() {
+    const confirmed = confirm(
+        "¿Seguro que quieres eliminar TODOS los mensajes guardados desde el 25/10/2026 en adelante? Esta acción solo afecta a daily_messages. No elimina las respuestas ni las fotos."
+    );
+
+    if (!confirmed) return;
+
+    setButtonBusy(
+        deleteFutureMessagesButton,
+        true,
+        "Eliminando mensajes...",
+        "Eliminar mensajes desde el 25/10/2026"
+    );
+
+    try {
+        const { error } = await supabaseClient
+            .from("daily_messages")
+            .delete()
+            .gte("date", DAILY_MESSAGES_CUTOFF);
+
+        if (error) throw error;
+
+        if (dailyMessageDate.value >= DAILY_MESSAGES_CUTOFF) {
+            dailyMessageTitle.value = "";
+            dailyMessageText.value = "";
+            dailyMessageFlower.value = "🌷";
+        }
+
+        setDailyMessageStatus(
+            "Se han eliminado los mensajes guardados desde el 25/10/2026. Las respuestas y las fotos siguen intactas.",
+            "success"
+        );
+    } catch (error) {
+        console.error("Error eliminando mensajes futuros:", error);
+        setDailyMessageStatus(`No se pudieron eliminar: ${error.message || "error desconocido"}`, "error");
+    } finally {
+        setButtonBusy(
+            deleteFutureMessagesButton,
+            false,
+            "Eliminando mensajes...",
+            "Eliminar mensajes desde el 25/10/2026"
+        );
+    }
+}
+
+loadDailyMessageButton.addEventListener("click", loadDailyMessageForDate);
+saveDailyMessageButton.addEventListener("click", saveDailyMessage);
+deleteDailyMessageButton.addEventListener("click", deleteDailyMessage);
+deleteFutureMessagesButton.addEventListener("click", deleteFutureDailyMessages);
+dailyMessageDate.addEventListener("change", loadDailyMessageForDate);
 
 
 /* =========================================================
@@ -1263,254 +580,95 @@ logoutButton.addEventListener(
 ========================================================= */
 
 async function loadResponses() {
+    responsesContainer.innerHTML = '<div class="loading">Cargando respuestas...</div>';
 
-    responsesContainer.innerHTML =
-        `<div class="loading">
-            Cargando respuestas...
-        </div>`;
-
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("responses")
-            .select(
-                "id,date,message,created_at,read"
-            )
-            .order(
-                "date",
-                {
-                    ascending: false
-                }
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
+    const { data, error } = await supabaseClient
+        .from("responses")
+        .select("id,date,message,created_at,read")
+        .order("date", { ascending: false })
+        .order("created_at", { ascending: false });
 
     if (error) {
-
-        console.error(error);
-
-        responsesContainer.innerHTML =
-            `<div class="empty">
-                No se pudieron cargar las respuestas.
-            </div>`;
-
+        console.error("Error cargando respuestas:", error);
+        responsesContainer.innerHTML = '<div class="empty">No se pudieron cargar las respuestas. Comprueba los permisos de Supabase.</div>';
         return;
-
     }
 
-
-    renderResponses(
-        data || []
-    );
-
+    renderResponses(data || []);
 }
-
 
 function renderResponses(data) {
-
-    totalCount.textContent =
-        data.length;
-
-
-    const unread =
-        data.filter(
-            response => !response.read
-        ).length;
-
-
-    unreadCount.textContent =
-        unread;
-
+    totalCount.textContent = data.length;
+    unreadCount.textContent = data.filter(response => !response.read).length;
 
     if (!data.length) {
-
-        responsesContainer.innerHTML =
-            `<div class="empty">
-                💌 Todavía no hay respuestas.
-            </div>`;
-
+        responsesContainer.innerHTML = '<div class="empty">💌 Todavía no hay respuestas.</div>';
         return;
-
     }
 
+    responsesContainer.innerHTML = "";
 
-    responsesContainer.innerHTML =
-        "";
+    data.forEach(response => {
+        const article = document.createElement("article");
+        article.className = "response";
 
+        if (!response.read) article.classList.add("unread");
 
-    data.forEach(
-        response => {
+        const top = document.createElement("div");
+        top.className = "response-top";
 
-            const article =
-                document.createElement(
-                    "article"
-                );
+        const date = document.createElement("div");
+        date.className = "response-date";
+        date.textContent = `🌹 ${formatDate(response.date)}`;
 
-
-            article.className =
-                "response";
-
-
-            if (!response.read) {
-
-                article.classList.add(
-                    "unread"
-                );
-
-            }
-
-
-            const top =
-                document.createElement(
-                    "div"
-                );
-
-            top.className =
-                "response-top";
-
-
-            const date =
-                document.createElement(
-                    "div"
-                );
-
-            date.className =
-                "response-date";
-
-            date.textContent =
-                `🌹 ${formatDate(
-                    response.date
-                )}`;
-
-
-            if (!response.read) {
-
-                const badge =
-                    document.createElement(
-                        "span"
-                    );
-
-                badge.className =
-                    "new";
-
-                badge.textContent =
-                    "NUEVA";
-
-                date.appendChild(
-                    badge
-                );
-
-            }
-
-
-            const time =
-                document.createElement(
-                    "div"
-                );
-
-            time.className =
-                "response-time";
-
-            time.textContent =
-                formatTime(
-                    response.created_at
-                );
-
-
-            top.appendChild(date);
-            top.appendChild(time);
-
-
-            const message =
-                document.createElement(
-                    "p"
-                );
-
-            message.className =
-                "response-message";
-
-            message.textContent =
-                response.message;
-
-
-            article.appendChild(top);
-            article.appendChild(message);
-
-
-            if (!response.read) {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-                button.className =
-                    "mark-read";
-
-                button.textContent =
-                    "✓ Marcar como leída";
-
-
-                button.addEventListener(
-                    "click",
-                    () => markAsRead(
-                        response.id
-                    )
-                );
-
-
-                article.appendChild(
-                    button
-                );
-
-            }
-
-
-            responsesContainer.appendChild(
-                article
-            );
-
+        if (!response.read) {
+            const badge = document.createElement("span");
+            badge.className = "new";
+            badge.textContent = "NUEVA";
+            date.appendChild(badge);
         }
-    );
 
+        const time = document.createElement("div");
+        time.className = "response-time";
+        time.textContent = formatTime(response.created_at);
+
+        top.append(date, time);
+
+        const message = document.createElement("p");
+        message.className = "response-message";
+        message.textContent = response.message || "";
+
+        article.append(top, message);
+
+        if (!response.read) {
+            const button = document.createElement("button");
+            button.className = "mark-read";
+            button.type = "button";
+            button.textContent = "✓ Marcar como leída";
+            button.addEventListener("click", () => markAsRead(response.id, button));
+            article.appendChild(button);
+        }
+
+        responsesContainer.appendChild(article);
+    });
 }
 
+async function markAsRead(id, button) {
+    button.disabled = true;
 
-async function markAsRead(id) {
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("responses")
-            .update({
-                read: true
-            })
-            .eq(
-                "id",
-                id
-            );
-
+    const { error } = await supabaseClient
+        .from("responses")
+        .update({ read: true })
+        .eq("id", id);
 
     if (error) {
-
-        console.error(error);
-
+        console.error("Error marcando respuesta como leída:", error);
+        alert("No se pudo marcar como leída. Comprueba los permisos de Supabase.");
+        button.disabled = false;
         return;
-
     }
 
-
-    loadResponses();
-
+    await loadResponses();
 }
 
 
@@ -1519,631 +677,194 @@ async function markAsRead(id) {
 ========================================================= */
 
 async function loadPendingPhotos() {
+    pendingPhotosContainer.innerHTML = '<div class="loading">Cargando fotos...</div>';
 
-    pendingPhotosContainer.innerHTML =
-        `<div class="loading">
-            Cargando fotos...
-        </div>`;
-
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("photos")
-            .select(
-                "id,storage_path,original_name,caption,status,created_at"
-            )
-            .eq(
-                "status",
-                "pending"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
+    const { data, error } = await supabaseClient
+        .from("photos")
+        .select("id,storage_path,original_name,caption,status,created_at")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
 
     if (error) {
-
-        console.error(
-            "Error cargando fotos pendientes:",
-            error
-        );
-
-
-        pendingPhotosContainer.innerHTML =
-            `<div class="empty">
-                ❌ No se pudieron cargar las fotos pendientes.
-            </div>`;
-
-
+        console.error("Error cargando fotos pendientes:", error);
+        pendingPhotosContainer.innerHTML = '<div class="empty">❌ No se pudieron cargar las fotos pendientes. Comprueba los permisos.</div>';
         return;
-
     }
 
+    pendingCount.textContent = (data || []).length;
 
-    pendingCount.textContent =
-        data?.length || 0;
-
-
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        pendingPhotosContainer.innerHTML =
-            `<div class="empty">
-                🌸 No hay fotos pendientes.
-            </div>`;
-
+    if (!data || data.length === 0) {
+        pendingPhotosContainer.innerHTML = '<div class="empty">🌸 No hay fotos pendientes.</div>';
         return;
-
     }
 
+    pendingPhotosContainer.innerHTML = "";
 
-    pendingPhotosContainer.innerHTML =
-        "";
-
-
-    for (
-        const photo of data
-    ) {
-
-        await renderPendingPhoto(
-            photo
-        );
-
+    for (const photo of data) {
+        await renderPendingPhoto(photo);
     }
-
 }
-
 
 async function renderPendingPhoto(photo) {
-
-    const {
-        data: signedData,
-        error
-    } =
-        await supabaseClient
-            .storage
-            .from(
-                PENDING_PHOTOS_BUCKET
-            )
-            .createSignedUrl(
-                photo.storage_path,
-                3600
-            );
-
+    const { data, error } = await supabaseClient
+        .storage
+        .from(PENDING_PHOTOS_BUCKET)
+        .createSignedUrl(photo.storage_path, 3600);
 
     if (error) {
-
-        console.error(
-            "Error creando URL de foto:",
-            error
-        );
-
-        return;
-
-    }
-
-
-    const card =
-        document.createElement(
-            "article"
-        );
-
-    card.className =
-        "pending-photo";
-
-
-    const imageWrapper =
-        document.createElement(
-            "div"
-        );
-
-    imageWrapper.className =
-        "pending-photo-image-wrapper";
-
-
-    const image =
-        document.createElement(
-            "img"
-        );
-
-    image.className =
-        "pending-photo-image";
-
-    image.src =
-        signedData.signedUrl;
-
-    image.alt =
-        photo.caption ||
-        "Foto pendiente";
-
-    image.loading =
-        "lazy";
-
-
-    imageWrapper.appendChild(
-        image
-    );
-
-
-    const content =
-        document.createElement(
-            "div"
-        );
-
-    content.className =
-        "pending-photo-content";
-
-
-    const name =
-        document.createElement(
-            "div"
-        );
-
-    name.className =
-        "pending-photo-name";
-
-    name.textContent =
-        photo.original_name ||
-        "Foto sin nombre";
-
-
-    const caption =
-        document.createElement(
-            "p"
-        );
-
-    caption.className =
-        "pending-photo-caption";
-
-    caption.textContent =
-        photo.caption ||
-        "Sin texto añadido.";
-
-
-    const date =
-        document.createElement(
-            "div"
-        );
-
-    date.className =
-        "pending-photo-date";
-
-    date.textContent =
-        formatTime(
-            photo.created_at
-        );
-
-
-    const actions =
-        document.createElement(
-            "div"
-        );
-
-    actions.className =
-        "photo-actions";
-
-
-    const approveButton =
-        document.createElement(
-            "button"
-        );
-
-    approveButton.className =
-        "approve-button";
-
-    approveButton.type =
-        "button";
-
-    approveButton.textContent =
-        "✓ Aprobar";
-
-
-    const rejectButton =
-        document.createElement(
-            "button"
-        );
-
-    rejectButton.className =
-        "reject-button";
-
-    rejectButton.type =
-        "button";
-
-    rejectButton.textContent =
-        "✕ Rechazar";
-
-
-    approveButton.addEventListener(
-        "click",
-        () => approvePhoto(
-            photo,
-            approveButton,
-            rejectButton
-        )
-    );
-
-
-    rejectButton.addEventListener(
-        "click",
-        () => rejectPhoto(
-            photo,
-            approveButton,
-            rejectButton
-        )
-    );
-
-
-    actions.appendChild(
-        approveButton
-    );
-
-    actions.appendChild(
-        rejectButton
-    );
-
-
-    content.appendChild(name);
-    content.appendChild(caption);
-    content.appendChild(date);
-    content.appendChild(actions);
-
-
-    card.appendChild(
-        imageWrapper
-    );
-
-    card.appendChild(
-        content
-    );
-
-
-    pendingPhotosContainer.appendChild(
-        card
-    );
-
-}
-
-
-async function approvePhoto(
-    photo,
-    approveButton,
-    rejectButton
-) {
-
-    approveButton.disabled =
-        true;
-
-    rejectButton.disabled =
-        true;
-
-    approveButton.textContent =
-        "Aprobando...";
-
-
-    try {
-
-        /*
-         * 1. Descargar la imagen privada
-         */
-
-        const {
-            data: fileData,
-            error: downloadError
-        } =
-            await supabaseClient
-                .storage
-                .from(
-                    PENDING_PHOTOS_BUCKET
-                )
-                .download(
-                    photo.storage_path
-                );
-
-
-        if (downloadError) {
-            throw downloadError;
-        }
-
-
-        /*
-         * 2. Subirla al bucket público
-         */
-
-        const {
-            error: uploadError
-        } =
-            await supabaseClient
-                .storage
-                .from(
-                    APPROVED_PHOTOS_BUCKET
-                )
-                .upload(
-                    photo.storage_path,
-                    fileData,
-                    {
-                        contentType:
-                            fileData.type ||
-                            "image/jpeg",
-
-                        cacheControl:
-                            "31536000",
-
-                        upsert:
-                            false
-                    }
-                );
-
-
-        if (uploadError) {
-            throw uploadError;
-        }
-
-
-        /*
-         * 3. Obtener usuario administrador
-         */
-
-        const {
-            data: userData,
-            error: userError
-        } =
-            await supabaseClient
-                .auth
-                .getUser();
-
-
-        if (userError) {
-            throw userError;
-        }
-
-
-        /*
-         * 4. Marcar como aprobada
-         */
-
-        const {
-            error: updateError
-        } =
-            await supabaseClient
-                .from("photos")
-                .update({
-
-                    status:
-                        "approved",
-
-                    approved_at:
-                        new Date().toISOString(),
-
-                    approved_by:
-                        userData.user?.id || null
-
-                })
-                .eq(
-                    "id",
-                    photo.id
-                );
-
-
-        if (updateError) {
-
-            /*
-             * Rollback del archivo público
-             */
-
-            await supabaseClient
-                .storage
-                .from(
-                    APPROVED_PHOTOS_BUCKET
-                )
-                .remove([
-                    photo.storage_path
-                ]);
-
-            throw updateError;
-
-        }
-
-
-        /*
-         * 5. Eliminar archivo privado
-         */
-
-        const {
-            error: deleteError
-        } =
-            await supabaseClient
-                .storage
-                .from(
-                    PENDING_PHOTOS_BUCKET
-                )
-                .remove([
-                    photo.storage_path
-                ]);
-
-
-        if (deleteError) {
-
-            console.warn(
-                "La foto fue aprobada pero no se pudo eliminar la copia pendiente:",
-                deleteError
-            );
-
-        }
-
-
-        await loadPendingPhotos();
-
-
-    } catch (error) {
-
-        console.error(
-            "Error aprobando foto:",
-            error
-        );
-
-
-        alert(
-            "No se pudo aprobar la foto. Revisa la consola."
-        );
-
-
-        approveButton.disabled =
-            false;
-
-        rejectButton.disabled =
-            false;
-
-        approveButton.textContent =
-            "✓ Aprobar";
-
-    }
-
-}
-
-
-async function rejectPhoto(
-    photo,
-    approveButton,
-    rejectButton
-) {
-
-    const confirmed =
-        window.confirm(
-            "¿Seguro que quieres rechazar esta foto?"
-        );
-
-
-    if (!confirmed) {
+        console.error("Error creando URL de foto:", error);
         return;
     }
 
+    const card = document.createElement("article");
+    card.className = "pending-photo";
 
-    approveButton.disabled =
-        true;
+    const imageWrapper = document.createElement("div");
+    imageWrapper.className = "pending-photo-image-wrapper";
 
-    rejectButton.disabled =
-        true;
+    const image = document.createElement("img");
+    image.className = "pending-photo-image";
+    image.src = data.signedUrl;
+    image.alt = photo.caption || "Foto pendiente";
+    image.loading = "lazy";
+    imageWrapper.appendChild(image);
 
-    rejectButton.textContent =
-        "Rechazando...";
+    const content = document.createElement("div");
+    content.className = "pending-photo-content";
 
+    const name = document.createElement("div");
+    name.className = "pending-photo-name";
+    name.textContent = photo.original_name || "Foto sin nombre";
+
+    const caption = document.createElement("p");
+    caption.className = "pending-photo-caption";
+    caption.textContent = photo.caption || "Sin texto añadido.";
+
+    const date = document.createElement("div");
+    date.className = "pending-photo-date";
+    date.textContent = formatTime(photo.created_at);
+
+    const actions = document.createElement("div");
+    actions.className = "photo-actions";
+
+    const approveButton = document.createElement("button");
+    approveButton.className = "approve-button";
+    approveButton.type = "button";
+    approveButton.textContent = "✓ Aprobar";
+
+    const rejectButton = document.createElement("button");
+    rejectButton.className = "reject-button";
+    rejectButton.type = "button";
+    rejectButton.textContent = "✕ Rechazar";
+
+    approveButton.addEventListener("click", () => approvePhoto(photo, approveButton, rejectButton));
+    rejectButton.addEventListener("click", () => rejectPhoto(photo, approveButton, rejectButton));
+
+    actions.append(approveButton, rejectButton);
+    content.append(name, caption, date, actions);
+    card.append(imageWrapper, content);
+    pendingPhotosContainer.appendChild(card);
+}
+
+async function approvePhoto(photo, approveButton, rejectButton) {
+    approveButton.disabled = true;
+    rejectButton.disabled = true;
+    approveButton.textContent = "Aprobando...";
 
     try {
+        const { data: fileData, error: downloadError } = await supabaseClient
+            .storage
+            .from(PENDING_PHOTOS_BUCKET)
+            .download(photo.storage_path);
 
-        /*
-         * 1. Eliminar archivo pendiente
-         */
+        if (downloadError) throw downloadError;
 
-        const {
-            error: deleteError
-        } =
-            await supabaseClient
-                .storage
-                .from(
-                    PENDING_PHOTOS_BUCKET
-                )
-                .remove([
-                    photo.storage_path
-                ]);
+        const { error: uploadError } = await supabaseClient
+            .storage
+            .from(APPROVED_PHOTOS_BUCKET)
+            .upload(photo.storage_path, fileData, {
+                contentType: fileData.type || "image/jpeg",
+                cacheControl: "31536000",
+                upsert: false
+            });
 
+        if (uploadError) throw uploadError;
 
-        if (deleteError) {
-            throw deleteError;
-        }
+        const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+        if (userError) throw userError;
 
-
-        /*
-         * 2. Mantener registro como rechazado
-         */
-
-        const {
-            error: updateError
-        } =
-            await supabaseClient
-                .from("photos")
-                .update({
-                    status:
-                        "rejected"
-                })
-                .eq(
-                    "id",
-                    photo.id
-                );
-
+        const { error: updateError } = await supabaseClient
+            .from("photos")
+            .update({
+                status: "approved",
+                approved_at: new Date().toISOString(),
+                approved_by: userData.user?.id || null
+            })
+            .eq("id", photo.id);
 
         if (updateError) {
+            await supabaseClient.storage.from(APPROVED_PHOTOS_BUCKET).remove([photo.storage_path]);
             throw updateError;
         }
 
+        const { error: deleteError } = await supabaseClient
+            .storage
+            .from(PENDING_PHOTOS_BUCKET)
+            .remove([photo.storage_path]);
+
+        if (deleteError) {
+            console.warn("La foto fue aprobada, pero no se pudo eliminar la copia pendiente:", deleteError);
+        }
 
         await loadPendingPhotos();
-
-
     } catch (error) {
-
-        console.error(
-            "Error rechazando foto:",
-            error
-        );
-
-
-        alert(
-            "No se pudo rechazar la foto. Revisa la consola."
-        );
-
-
-        approveButton.disabled =
-            false;
-
-        rejectButton.disabled =
-            false;
-
-        rejectButton.textContent =
-            "✕ Rechazar";
-
+        console.error("Error aprobando foto:", error);
+        alert(`No se pudo aprobar la foto: ${error.message || "error desconocido"}`);
+        approveButton.disabled = false;
+        rejectButton.disabled = false;
+        approveButton.textContent = "✓ Aprobar";
     }
+}
 
+async function rejectPhoto(photo, approveButton, rejectButton) {
+    if (!confirm("¿Seguro que quieres rechazar esta foto?")) return;
+
+    approveButton.disabled = true;
+    rejectButton.disabled = true;
+    rejectButton.textContent = "Rechazando...";
+
+    try {
+        const { error: deleteError } = await supabaseClient
+            .storage
+            .from(PENDING_PHOTOS_BUCKET)
+            .remove([photo.storage_path]);
+
+        if (deleteError) throw deleteError;
+
+        const { error: updateError } = await supabaseClient
+            .from("photos")
+            .update({ status: "rejected" })
+            .eq("id", photo.id);
+
+        if (updateError) throw updateError;
+
+        await loadPendingPhotos();
+    } catch (error) {
+        console.error("Error rechazando foto:", error);
+        alert(`No se pudo rechazar la foto: ${error.message || "error desconocido"}`);
+        approveButton.disabled = false;
+        rejectButton.disabled = false;
+        rejectButton.textContent = "✕ Rechazar";
+    }
 }
 
 
 /* =========================================================
-   AUTH
+   INICIO
 ========================================================= */
 
-supabaseClient
-    .auth
-    .onAuthStateChange(
-        (
-            event,
-            session
-        ) => {
-
-            if (session) {
-
-                showAdmin();
-
-            } else {
-
-                showLogin();
-
-            }
-
-        }
-    );
-
-
 checkSession();
-
 </script>
 
 </body>
-
 </html>
