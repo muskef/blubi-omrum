@@ -248,7 +248,14 @@ const SUPABASE_ANON_KEY = "sb_publishable_Q-FkjZiyjIbriXcDUliaVQ__MnqNIhV";
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_ANON_KEY
+    SUPABASE_ANON_KEY,
+    {
+        auth: {
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: true
+        }
+    }
 );
 
 const PENDING_PHOTOS_BUCKET = "pending-photos";
@@ -331,18 +338,45 @@ function setButtonBusy(button, busy, busyText, normalText) {
 ========================================================= */
 
 async function checkSession() {
-    const { data, error } = await supabaseClient.auth.getSession();
+    showLogin();
 
-    if (error) {
-        console.error("Error comprobando sesión:", error);
-        showLogin();
-        return;
-    }
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
 
-    if (data.session) {
+        if (error) {
+            throw error;
+        }
+
+        if (!data.session) {
+            showLogin();
+            return;
+        }
+
+        // Renueva la sesión antes de consultar los datos del panel.
+        const {
+            data: refreshedData,
+            error: refreshError
+        } = await supabaseClient.auth.refreshSession();
+
+        if (refreshError || !refreshedData.session) {
+            console.error(
+                "No se pudo renovar la sesión:",
+                refreshError
+            );
+
+            await supabaseClient.auth.signOut();
+            showLogin();
+            return;
+        }
+
         showAdmin();
         await loadAllAdminData();
-    } else {
+
+    } catch (error) {
+        console.error(
+            "Error comprobando o renovando la sesión:",
+            error
+        );
         showLogin();
     }
 }
@@ -366,18 +400,25 @@ loginForm.addEventListener("submit", async event => {
     setButtonBusy(button, true, "Entrando...", "Entrar ❤️");
 
     try {
-        const { error } = await supabaseClient.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email,
             password
         });
 
         if (error) throw error;
 
+        if (!data.session) {
+            throw new Error("No se ha podido crear una sesión.");
+        }
+
         showAdmin();
         await loadAllAdminData();
+
     } catch (error) {
         console.error("Error iniciando sesión:", error);
-        loginError.textContent = "No se pudo iniciar sesión. Comprueba el email y la contraseña.";
+        loginError.textContent =
+            "No se pudo iniciar sesión. Comprueba el email y la contraseña.";
+
     } finally {
         setButtonBusy(button, false, "Entrando...", "Entrar ❤️");
     }
@@ -386,17 +427,20 @@ loginForm.addEventListener("submit", async event => {
 logoutButton.addEventListener("click", async () => {
     logoutButton.disabled = true;
 
-    const { error } = await supabaseClient.auth.signOut();
+    try {
+        const { error } = await supabaseClient.auth.signOut();
 
-    logoutButton.disabled = false;
+        if (error) throw error;
 
-    if (error) {
+        showLogin();
+
+    } catch (error) {
         console.error("Error cerrando sesión:", error);
         alert("No se pudo cerrar la sesión.");
-        return;
-    }
 
-    showLogin();
+    } finally {
+        logoutButton.disabled = false;
+    }
 });
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
@@ -455,7 +499,10 @@ async function saveDailyMessage() {
     const flower = dailyMessageFlower.value.trim() || "🌷";
 
     if (!date || !title || !message) {
-        setDailyMessageStatus("Selecciona una fecha y escribe un título y un mensaje.", "error");
+        setDailyMessageStatus(
+            "Selecciona una fecha y escribe un título y un mensaje.",
+            "error"
+        );
         return;
     }
 
@@ -486,9 +533,14 @@ async function saveDailyMessage() {
             `Mensaje guardado para ${formatDate(date)}. Para comprobarlo en la página del calendario, recárgala.`,
             "success"
         );
+
     } catch (error) {
         console.error("Error guardando mensaje diario:", error);
-        setDailyMessageStatus(`No se pudo guardar: ${error.message || "error desconocido"}`, "error");
+        setDailyMessageStatus(
+            `No se pudo guardar: ${error.message || "error desconocido"}`,
+            "error"
+        );
+
     } finally {
         setButtonBusy(saveDailyMessageButton, false, "Guardando...", "Guardar mensaje");
     }
@@ -500,7 +552,12 @@ async function deleteDailyMessage() {
 
     if (!confirm(`¿Eliminar únicamente el mensaje del ${formatDate(date)}?`)) return;
 
-    setButtonBusy(deleteDailyMessageButton, true, "Eliminando...", "Eliminar mensaje de esta fecha");
+    setButtonBusy(
+        deleteDailyMessageButton,
+        true,
+        "Eliminando...",
+        "Eliminar mensaje de esta fecha"
+    );
 
     try {
         const { error } = await supabaseClient
@@ -514,12 +571,25 @@ async function deleteDailyMessage() {
         dailyMessageText.value = "";
         dailyMessageFlower.value = "🌷";
 
-        setDailyMessageStatus(`Mensaje del ${formatDate(date)} eliminado.`, "success");
+        setDailyMessageStatus(
+            `Mensaje del ${formatDate(date)} eliminado.`,
+            "success"
+        );
+
     } catch (error) {
         console.error("Error eliminando mensaje:", error);
-        setDailyMessageStatus(`No se pudo eliminar: ${error.message || "error desconocido"}`, "error");
+        setDailyMessageStatus(
+            `No se pudo eliminar: ${error.message || "error desconocido"}`,
+            "error"
+        );
+
     } finally {
-        setButtonBusy(deleteDailyMessageButton, false, "Eliminando...", "Eliminar mensaje de esta fecha");
+        setButtonBusy(
+            deleteDailyMessageButton,
+            false,
+            "Eliminando...",
+            "Eliminar mensaje de esta fecha"
+        );
     }
 }
 
@@ -555,9 +625,14 @@ async function deleteFutureDailyMessages() {
             "Se han eliminado los mensajes guardados desde el 25/10/2026. Las respuestas y las fotos siguen intactas.",
             "success"
         );
+
     } catch (error) {
         console.error("Error eliminando mensajes futuros:", error);
-        setDailyMessageStatus(`No se pudieron eliminar: ${error.message || "error desconocido"}`, "error");
+        setDailyMessageStatus(
+            `No se pudieron eliminar: ${error.message || "error desconocido"}`,
+            "error"
+        );
+
     } finally {
         setButtonBusy(
             deleteFutureMessagesButton,
@@ -580,7 +655,8 @@ dailyMessageDate.addEventListener("change", loadDailyMessageForDate);
 ========================================================= */
 
 async function loadResponses() {
-    responsesContainer.innerHTML = '<div class="loading">Cargando respuestas...</div>';
+    responsesContainer.innerHTML =
+        '<div class="loading">Cargando respuestas...</div>';
 
     const { data, error } = await supabaseClient
         .from("responses")
@@ -590,7 +666,8 @@ async function loadResponses() {
 
     if (error) {
         console.error("Error cargando respuestas:", error);
-        responsesContainer.innerHTML = '<div class="empty">No se pudieron cargar las respuestas. Comprueba los permisos de Supabase.</div>';
+        responsesContainer.innerHTML =
+            '<div class="empty">No se pudieron cargar las respuestas. Comprueba los permisos de Supabase.</div>';
         return;
     }
 
@@ -602,7 +679,8 @@ function renderResponses(data) {
     unreadCount.textContent = data.filter(response => !response.read).length;
 
     if (!data.length) {
-        responsesContainer.innerHTML = '<div class="empty">💌 Todavía no hay respuestas.</div>';
+        responsesContainer.innerHTML =
+            '<div class="empty">💌 Todavía no hay respuestas.</div>';
         return;
     }
 
@@ -645,7 +723,10 @@ function renderResponses(data) {
             button.className = "mark-read";
             button.type = "button";
             button.textContent = "✓ Marcar como leída";
-            button.addEventListener("click", () => markAsRead(response.id, button));
+            button.addEventListener(
+                "click",
+                () => markAsRead(response.id, button)
+            );
             article.appendChild(button);
         }
 
@@ -677,7 +758,8 @@ async function markAsRead(id, button) {
 ========================================================= */
 
 async function loadPendingPhotos() {
-    pendingPhotosContainer.innerHTML = '<div class="loading">Cargando fotos...</div>';
+    pendingPhotosContainer.innerHTML =
+        '<div class="loading">Cargando fotos...</div>';
 
     const { data, error } = await supabaseClient
         .from("photos")
@@ -687,14 +769,16 @@ async function loadPendingPhotos() {
 
     if (error) {
         console.error("Error cargando fotos pendientes:", error);
-        pendingPhotosContainer.innerHTML = '<div class="empty">❌ No se pudieron cargar las fotos pendientes. Comprueba los permisos.</div>';
+        pendingPhotosContainer.innerHTML =
+            '<div class="empty">❌ No se pudieron cargar las fotos pendientes. Comprueba los permisos.</div>';
         return;
     }
 
     pendingCount.textContent = (data || []).length;
 
     if (!data || data.length === 0) {
-        pendingPhotosContainer.innerHTML = '<div class="empty">🌸 No hay fotos pendientes.</div>';
+        pendingPhotosContainer.innerHTML =
+            '<div class="empty">🌸 No hay fotos pendientes.</div>';
         return;
     }
 
@@ -757,8 +841,15 @@ async function renderPendingPhoto(photo) {
     rejectButton.type = "button";
     rejectButton.textContent = "✕ Rechazar";
 
-    approveButton.addEventListener("click", () => approvePhoto(photo, approveButton, rejectButton));
-    rejectButton.addEventListener("click", () => rejectPhoto(photo, approveButton, rejectButton));
+    approveButton.addEventListener(
+        "click",
+        () => approvePhoto(photo, approveButton, rejectButton)
+    );
+
+    rejectButton.addEventListener(
+        "click",
+        () => rejectPhoto(photo, approveButton, rejectButton)
+    );
 
     actions.append(approveButton, rejectButton);
     content.append(name, caption, date, actions);
@@ -772,7 +863,10 @@ async function approvePhoto(photo, approveButton, rejectButton) {
     approveButton.textContent = "Aprobando...";
 
     try {
-        const { data: fileData, error: downloadError } = await supabaseClient
+        const {
+            data: fileData,
+            error: downloadError
+        } = await supabaseClient
             .storage
             .from(PENDING_PHOTOS_BUCKET)
             .download(photo.storage_path);
@@ -790,7 +884,11 @@ async function approvePhoto(photo, approveButton, rejectButton) {
 
         if (uploadError) throw uploadError;
 
-        const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+        const {
+            data: userData,
+            error: userError
+        } = await supabaseClient.auth.getUser();
+
         if (userError) throw userError;
 
         const { error: updateError } = await supabaseClient
@@ -803,7 +901,11 @@ async function approvePhoto(photo, approveButton, rejectButton) {
             .eq("id", photo.id);
 
         if (updateError) {
-            await supabaseClient.storage.from(APPROVED_PHOTOS_BUCKET).remove([photo.storage_path]);
+            await supabaseClient
+                .storage
+                .from(APPROVED_PHOTOS_BUCKET)
+                .remove([photo.storage_path]);
+
             throw updateError;
         }
 
@@ -813,13 +915,18 @@ async function approvePhoto(photo, approveButton, rejectButton) {
             .remove([photo.storage_path]);
 
         if (deleteError) {
-            console.warn("La foto fue aprobada, pero no se pudo eliminar la copia pendiente:", deleteError);
+            console.warn(
+                "La foto fue aprobada, pero no se pudo eliminar la copia pendiente:",
+                deleteError
+            );
         }
 
         await loadPendingPhotos();
+
     } catch (error) {
         console.error("Error aprobando foto:", error);
         alert(`No se pudo aprobar la foto: ${error.message || "error desconocido"}`);
+
         approveButton.disabled = false;
         rejectButton.disabled = false;
         approveButton.textContent = "✓ Aprobar";
@@ -849,9 +956,11 @@ async function rejectPhoto(photo, approveButton, rejectButton) {
         if (updateError) throw updateError;
 
         await loadPendingPhotos();
+
     } catch (error) {
         console.error("Error rechazando foto:", error);
         alert(`No se pudo rechazar la foto: ${error.message || "error desconocido"}`);
+
         approveButton.disabled = false;
         rejectButton.disabled = false;
         rejectButton.textContent = "✕ Rechazar";
