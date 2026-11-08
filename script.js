@@ -16,6 +16,118 @@ const supabaseClient =
 
 
 /* =========================================================
+   REGISTRO ANÓNIMO DE VISITAS
+========================================================= */
+
+// Identificador aleatorio que solo existe durante esta visita.
+const visitorSessionId = crypto.randomUUID();
+
+let visitorSessionEnded = false;
+
+
+// Registrar entrada
+async function registerVisitorEntry() {
+
+    const {
+        error
+    } = await supabaseClient
+        .from("visitor_events")
+        .insert({
+
+            session_id:
+                visitorSessionId,
+
+            event_type:
+                "start"
+
+        });
+
+
+    if (error) {
+
+        console.error(
+            "No se pudo registrar la entrada:",
+            error
+        );
+
+    }
+
+}
+
+
+// Registrar salida aproximada
+function registerVisitorExit() {
+
+    if (visitorSessionEnded) {
+
+        return;
+
+    }
+
+
+    visitorSessionEnded = true;
+
+
+    fetch(
+        `${SUPABASE_URL}/rest/v1/visitor_events`,
+        {
+
+            method: "POST",
+
+            keepalive: true,
+
+            headers: {
+
+                "apikey":
+                    SUPABASE_ANON_KEY,
+
+                "Authorization":
+                    `Bearer ${SUPABASE_ANON_KEY}`,
+
+                "Content-Type":
+                    "application/json",
+
+                "Prefer":
+                    "return=minimal"
+
+            },
+
+            body: JSON.stringify({
+
+                session_id:
+                    visitorSessionId,
+
+                event_type:
+                    "end"
+
+            })
+
+        }
+
+    ).catch(error => {
+
+        console.error(
+            "No se pudo registrar la salida:",
+            error
+        );
+
+    });
+
+}
+
+
+// Registrar entrada al cargar la página
+registerVisitorEntry();
+
+
+// Intentar registrar salida cuando se abandona la página
+window.addEventListener(
+    "pagehide",
+    registerVisitorExit
+);
+
+
+/* =========================================================
    CALENDARIO
 ========================================================= */
 
