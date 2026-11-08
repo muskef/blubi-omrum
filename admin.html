@@ -96,6 +96,19 @@ textarea { min-height:190px; resize:vertical; line-height:1.65; }
 .editor-status.success { color:#a5e6b4; }
 .editor-status.error { color:#ff9fae; }
 .responses { display:grid; gap:16px; }
+
+.visitor-sessions { display:grid; gap:12px; }
+.visitor-session {
+    padding:18px 20px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:rgba(255,255,255,.035);
+}
+.visitor-session-top { display:flex; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.visitor-session-title { color:var(--pink-light); font-weight:700; }
+.visitor-session-meta { color:var(--muted); font-size:12px; line-height:1.7; white-space:pre-line; }
+.visitor-session-status { color:var(--gold); font-size:12px; }
+
 .response.unread { border-color:rgba(242,154,187,.6); box-shadow:0 0 25px rgba(242,154,187,.08); }
 .response-top { display:flex; justify-content:space-between; gap:15px; margin-bottom:14px; }
 .response-date { color:var(--pink-light); font-weight:700; }
@@ -115,6 +128,7 @@ textarea { min-height:190px; resize:vertical; line-height:1.65; }
 .approve-button,.reject-button { padding:11px 8px; border-radius:10px; font-weight:700; }
 .approve-button { border:0; background:rgba(100,220,140,.12); color:#a5e6b4; }
 .reject-button { border:1px solid rgba(255,120,140,.25); background:rgba(255,120,140,.10); color:#ffb0bb; }
+
 @media(max-width:650px) {
     header { align-items:flex-start; flex-direction:column; }
     .stats { grid-template-columns:1fr; }
@@ -214,6 +228,16 @@ textarea { min-height:190px; resize:vertical; line-height:1.65; }
 
     <section class="admin-section">
         <div class="section-heading">
+            <h2>👁️ Visitas anónimas</h2>
+            <p>Sesiones registradas en la web. No identifican a la persona que ha entrado; solo muestran eventos anónimos de inicio y cierre.</p>
+        </div>
+        <section id="visitorSessions" class="visitor-sessions">
+            <div class="loading">Cargando visitas...</div>
+        </section>
+    </section>
+
+    <section class="admin-section">
+        <div class="section-heading">
             <h2>💌 Respuestas</h2>
             <p>Mensajes que se han enviado desde el calendario.</p>
         </div>
@@ -275,6 +299,7 @@ const totalCount = $("totalCount");
 const unreadCount = $("unreadCount");
 const pendingCount = $("pendingCount");
 const pendingPhotosContainer = $("pendingPhotos");
+const visitorSessionsContainer = $("visitorSessions");
 
 const dailyMessageDate = $("dailyMessageDate");
 const dailyMessageFlower = $("dailyMessageFlower");
@@ -352,7 +377,6 @@ async function checkSession() {
             return;
         }
 
-        // Renueva la sesión antes de consultar los datos del panel.
         const {
             data: refreshedData,
             error: refreshError
@@ -385,7 +409,8 @@ async function loadAllAdminData() {
     await Promise.allSettled([
         loadResponses(),
         loadPendingPhotos(),
-        loadDailyMessageForDate()
+        loadDailyMessageForDate(),
+        loadVisitorSessions()
     ]);
 }
 
@@ -648,6 +673,126 @@ saveDailyMessageButton.addEventListener("click", saveDailyMessage);
 deleteDailyMessageButton.addEventListener("click", deleteDailyMessage);
 deleteFutureMessagesButton.addEventListener("click", deleteFutureDailyMessages);
 dailyMessageDate.addEventListener("change", loadDailyMessageForDate);
+
+
+/* =========================================================
+   VISITAS ANÓNIMAS
+========================================================= */
+
+async function loadVisitorSessions() {
+    visitorSessionsContainer.innerHTML =
+        '<div class="loading">Cargando visitas...</div>';
+
+    const { data, error } = await supabaseClient
+        .from("visitor_events")
+        .select("session_id,event_type,created_at")
+        .order("created_at", { ascending: false })
+        .limit(500);
+
+    if (error) {
+        console.error("Error cargando visitas:", error);
+        visitorSessionsContainer.innerHTML =
+            '<div class="empty">No se pudieron cargar las visitas. Comprueba que has creado visitor_events y sus políticas RLS.</div>';
+        return;
+    }
+
+    const sessions = new Map();
+
+    for (const event of (data || [])) {
+        if (!event.session_id) continue;
+
+        if (!sessions.has(event.session_id)) {
+            sessions.set(event.session_id, {
+                sessionId: event.session_id,
+                startedAt: null,
+                endedAt: null
+            });
+        }
+
+        const session = sessions.get(event.session_id);
+        const time = new Date(event.created_at);
+
+        if (event.event_type === "start" &&
+            (!session.startedAt || time < session.startedAt)) {
+            session.startedAt = time;
+        }
+
+        if (event.event_type === "end" &&
+            (!session.endedAt || time > session.endedAt)) {
+            session.endedAt = time;
+        }
+    }
+
+    renderVisitorSessions(Array.from(sessions.values()));
+}
+
+function formatDuration(start, end) {
+    if (!start || !end || end < start) return "No disponible";
+
+    const totalMinutes = Math.max(0, Math.round((end - start) / 60000));
+    if (totalMinutes < 1) return "Menos de un minuto";
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours === 0) return `${minutes} min`;
+    if (minutes === 0) return `${hours} h`;
+    return `${hours} h ${minutes} min`;
+}
+
+function renderVisitorSessions(sessions) {
+    if (!sessions.length) {
+        visitorSessionsContainer.innerHTML =
+            '<div class="empty">Todavía no hay sesiones registradas.</div>';
+        return;
+    }
+
+    visitorSessionsContainer.innerHTML = "";
+
+    sessions.sort((a, b) => {
+        const aTime = a.startedAt || a.endedAt || new Date(0);
+        const bTime = b.startedAt || b.endedAt || new Date(0);
+        return bTime - aTime;
+    });
+
+    for (const session of sessions) {
+        const card = document.createElement("article");
+        card.className = "visitor-session";
+
+        const top = document.createElement("div");
+        top.className = "visitor-session-top";
+
+        const title = document.createElement("div");
+        title.className = "visitor-session-title";
+        title.textContent = "Sesión anónima";
+
+        const status = document.createElement("div");
+        status.className = "visitor-session-status";
+        status.textContent = session.endedAt
+            ? "Cierre registrado"
+            : "Sin evento de cierre";
+
+        top.append(title, status);
+
+        const meta = document.createElement("div");
+        meta.className = "visitor-session-meta";
+
+        const startText = session.startedAt
+            ? session.startedAt.toLocaleString("es-ES")
+            : "No registrado";
+        const endText = session.endedAt
+            ? session.endedAt.toLocaleString("es-ES")
+            : "No registrado";
+
+        meta.textContent =
+            `Entrada: ${startText}\n` +
+            `Salida: ${endText}\n` +
+            `Duración aproximada: ${formatDuration(session.startedAt, session.endedAt)}`;
+
+        card.append(top, meta);
+        visitorSessionsContainer.appendChild(card);
+    }
+}
 
 
 /* =========================================================
